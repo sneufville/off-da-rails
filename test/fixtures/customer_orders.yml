@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer_id: 1
+  order_total: 1
+  order_item_count: 1
+  transaction_id: MyString
+  order_state: 1
+  order_complete: false
+
+two:
+  customer_id: 1
+  order_total: 1
+  order_item_count: 1
+  transaction_id: MyString
+  order_state: 1
+  order_complete: false

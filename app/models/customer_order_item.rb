@@ -1,0 +1,2 @@
+class CustomerOrderItem < ApplicationRecord
+end
