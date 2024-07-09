@@ -1,0 +1,2 @@
+class ProvincialTax < ApplicationRecord
+end
