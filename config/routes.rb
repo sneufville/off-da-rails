@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   root "homepage#index"
   resources :about_page, only: [:index, :show, :update]
   resources :contact_page, only: [:index, :show]
+  resources :items, only: [:index, :show]
 end
