@@ -1,0 +1,13 @@
+<div class="p-4 flex flex-col">
+  <h1 class="text-4xl">Contact Us</h1>
+  <div>
+    <% if @contact_page.nil? %>
+      <div class="bg-red-50 p-2 rounded">
+        <h2 class="text-red-700 text-2xl">Uh oh!</h2>
+        <p class="text-red-400 text-lg">Nothing to see here at the moment</p>
+      </div>
+    <% else %>
+      <%= @contact_page.content %>
+    <% end %>
+  </div>
+</div>
