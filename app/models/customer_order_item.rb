@@ -7,4 +7,8 @@ class CustomerOrderItem < ApplicationRecord
   # relationships
   belongs_to :item
   belongs_to :customer_order
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "id", "id_value", "item_cost", "item_id", "item_name", "item_qty", "item_total_cost", "order_id", "tax_amt", "updated_at"]
+  end
 end
