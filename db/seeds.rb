@@ -159,3 +159,4 @@ category_number = 1
 
   category_number += 1
 end
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

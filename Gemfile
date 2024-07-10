@@ -75,4 +75,4 @@ gem 'faker'
 
 gem "cssbundling-rails", "~> 1.4"
 
-# gem 'activeadmin', "4.0.0.beta7"
+gem 'activeadmin', "4.0.0.beta7"
