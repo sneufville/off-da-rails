@@ -17,3 +17,5 @@ export type ItemCategory = {
   category_description: string;
   category_image_path?: string;
 };
+
+export type InfoCardType = 'error' | 'info';

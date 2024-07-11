@@ -15,12 +15,13 @@ import {
 import { BiChevronDown, BiFilter, BiReset } from 'react-icons/bi';
 import clsx from 'clsx';
 import type { ItemCategory, Item } from '../../@types/offDaRails';
+import InfoCard from '../../components/shared/InfoCard/InfoCard';
 
 type ItemListingProps = {
   items: Array<Item>;
   item_categories: Array<ItemCategory>;
   selected_item_category?: string;
-  item_filter_text?: string;
+  item_name_filter?: string;
   item_count?: number;
 };
 
@@ -28,7 +29,8 @@ const ItemIndex: React.FC<ItemListingProps> = ({
   item_categories,
   items,
   selected_item_category,
-  item_filter_text,
+  item_name_filter,
+  item_count,
 }) => {
   const [itemNameFilter, setItemNameFilter] = React.useState<string>('');
   const [categoryQuery, setCategoryQuery] = React.useState<string>('');
@@ -36,8 +38,8 @@ const ItemIndex: React.FC<ItemListingProps> = ({
     React.useState<ItemCategory | null>(null);
 
   React.useEffect(() => {
-    if (item_filter_text) setItemNameFilter(item_filter_text);
-  }, [item_filter_text]);
+    if (item_name_filter) setItemNameFilter(item_name_filter);
+  }, [item_name_filter]);
 
   React.useEffect(() => {
     if (selected_item_category) {
@@ -146,20 +148,28 @@ const ItemIndex: React.FC<ItemListingProps> = ({
           </button>
         </div>
       </div>
-      <section>
+      <section className="flex flex-col gap-y-2">
+        <div className="flex items-center">
+          <span className="p-2 bg-gray-400 rounded">
+            {item_count} item{item_count !== 1 ? 's' : ''} found
+          </span>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {items.length
-            ? items.map((item) => (
-                <div
-                  key={`item-${item.id}`}
-                  className="p-2 rounded bg-slate-50"
-                >
-                  <h2 className="text-xl font-bold">{item.item_name}</h2>
-                  <p className="text-lg">{item.item_description}</p>
-                  <p>${item.item_cost / 100}</p>
-                </div>
-              ))
-            : undefined}
+          {items.length ? (
+            items.map((item) => (
+              <div key={`item-${item.id}`} className="p-2 rounded bg-slate-50">
+                <h2 className="text-xl font-bold">{item.item_name}</h2>
+                <p className="text-lg">{item.item_description}</p>
+                <p>${item.item_cost / 100}</p>
+              </div>
+            ))
+          ) : (
+            <InfoCard
+              cardType={'info'}
+              title={'No Items Found'}
+              content={`No results were found with the filters applied.`}
+            />
+          )}
         </div>
       </section>
     </div>

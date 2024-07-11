@@ -3,13 +3,32 @@ class ItemsController < ApplicationController
     item_category_filter = params[:item_category] || nil
     item_name = params[:item_name] || nil
 
+    if item_name == ''
+      item_name = nil
+    end
+
+    if item_category_filter == ''
+      item_category_filter = nil
+    end
+    filter_condition = []
+    if item_name
+      filter_condition = ["item_name LIKE ?", "%#{item_name}%"]
+    elsif item_category_filter
+      filter_condition = ["item_category_id = ?", item_category_filter]
+    elsif item_name && item_category_filter
+      filter_condition = ["item_name LIKE ? AND item_category_id = ?", "%#{item_name}%", item_category_filter]
+    end
+
     item_categories = ItemCategory.all
-    items = Item.includes(:item_category)
+    items = Item.includes(:item_category).where(filter_condition)
+    item_count = Item.where(filter_condition).count
 
     render inertia: 'Item/Index', props: {
       item_categories: item_categories,
       items: items,
-      selected_item_category: item_category_filter
+      item_count: item_count,
+      selected_item_category: item_category_filter,
+      item_name_filter: item_name
     }
   end
 
