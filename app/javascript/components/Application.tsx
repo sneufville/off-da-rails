@@ -9,6 +9,12 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 
 createInertiaApp({
+  progress: {
+    delay: 1000,
+    color: '#29d',
+    includeCSS: true,
+    showSpinner: true,
+  },
   resolve: async (name: string) => {
     const pages = import.meta.glob('../pages/**/*.tsx', { eager: true });
     // return import(`./${name}`);

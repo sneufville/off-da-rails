@@ -6,13 +6,8 @@
 
 import * as React from 'react';
 import type { FC as ReactFC } from 'react';
-
-type Item = {
-  id: number;
-  item_cost: number;
-  item_name: string;
-  item_description: string;
-};
+import { Link } from '@inertiajs/react';
+import type { Item } from '../../@types/offDaRails';
 
 type HomeProps = {
   name: string;
@@ -34,7 +29,7 @@ const Home: ReactFC<HomeProps> = ({ name, items }) => {
                 key={`item-${item.id}`}
               >
                 <h2 className="font-bold text-xl">
-                  <a href={`items/${item.id}`}>{item.item_name}</a>
+                  <Link href={`items/${item.id}`}>{item.item_name}</Link>
                 </h2>
                 <p className="text-lg leading-8 italic">
                   {item.item_description}
