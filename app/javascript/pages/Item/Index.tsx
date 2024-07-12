@@ -16,6 +16,7 @@ import { BiChevronDown, BiFilter, BiReset } from 'react-icons/bi';
 import clsx from 'clsx';
 import type { ItemCategory, Item } from '../../@types/offDaRails';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
+import ItemCard from '../../components/shared/ItemCard/ItemCard';
 
 type ItemListingProps = {
   items: Array<Item>;
@@ -78,6 +79,13 @@ const ItemIndex: React.FC<ItemListingProps> = ({
     setItemNameFilter('');
     router.visit(`/items`);
   }, []);
+
+  const getCategoryForItem = React.useCallback(
+    (item: Item): ItemCategory | undefined => {
+      return item_categories.find((c) => c.id === item.id);
+    },
+    [item_categories]
+  );
 
   console.info('item categories: ', item_categories);
   // derived
@@ -154,15 +162,17 @@ const ItemIndex: React.FC<ItemListingProps> = ({
             {item_count} item{item_count !== 1 ? 's' : ''} found
           </span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div>
           {items.length ? (
-            items.map((item) => (
-              <div key={`item-${item.id}`} className="p-2 rounded bg-slate-50">
-                <h2 className="text-xl font-bold">{item.item_name}</h2>
-                <p className="text-lg">{item.item_description}</p>
-                <p>${item.item_cost / 100}</p>
-              </div>
-            ))
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {items.map((item) => (
+                <ItemCard
+                  key={`item-${item.id}`}
+                  item={item}
+                  itemCategory={getCategoryForItem(item)}
+                />
+              ))}
+            </div>
           ) : (
             <InfoCard
               cardType={'info'}
