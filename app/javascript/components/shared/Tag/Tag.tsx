@@ -8,13 +8,14 @@ import React from 'react';
 import { BiTag } from 'react-icons/bi';
 
 type TagProps = {
+  iconElement?: React.ReactElement;
   tagText: string;
 };
 
-const Tag: React.FC<TagProps> = ({ tagText }) => {
+const Tag: React.FC<TagProps> = ({ iconElement, tagText }) => {
   return (
-    <span className="px-2 py-1 rounded flex items-center gap-x-1 bg-blue-500 w-fit text-white">
-      <BiTag />
+    <span className="px-2 py-1 rounded flex items-center font-medium gap-x-1 bg-blue-500 w-fit text-white">
+      {iconElement ? iconElement : <BiTag />}
       {tagText}
     </span>
   );

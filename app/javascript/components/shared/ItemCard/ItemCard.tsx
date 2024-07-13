@@ -24,7 +24,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
     <div className="p-2 bg-gray-50 rounded w-full">
       <div className="flex flex-col gap-y-2">
         <h2 className="text-xl font-bold hover:underline duration-200">
-          <Link href={`${linkBase ? linkBase : 'items'}/${item.id}`}>
+          <Link href={`/${linkBase ? linkBase : 'items'}/${item.id}`}>
             {item.item_name}
           </Link>
         </h2>

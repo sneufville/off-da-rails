@@ -80,3 +80,6 @@ gem 'activeadmin', "4.0.0.beta7"
 # inertia
 gem 'inertia_rails'
 gem 'vite_rails'
+
+# kaminari
+gem 'kaminari'

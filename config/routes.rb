@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   resources :about_page, only: [:index, :show, :update]
   resources :contact_page, only: [:index, :show]
   resources :items, only: [:index, :show]
+  resources :item_categories, only: [:index, :show]
 end
