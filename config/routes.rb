@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   resources :contact_page, only: [:index, :show]
   resources :items, only: [:index, :show]
   resources :item_categories, only: [:index, :show]
+  get '/item_categories/:id/items', to: "item_categories#items_for_category"
 end

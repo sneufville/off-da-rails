@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import type { Item, ItemCategory } from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
@@ -36,9 +37,17 @@ const ItemCategoryDetail: React.FC<ItemCategoryDetailProps> = ({
             tagText={`Number of related items: ${item_count}`}
           />
           <hr />
-          <h2 className="text-2xl">
-            Most Recently Added Items for this category
-          </h2>
+          <div className="flex flex-1 items-center justify-between">
+            <h2 className="text-2xl">
+              Most Recently Added Items for this category
+            </h2>
+            <Link
+              className="hover:underline w-fit"
+              href={`/item_categories/${category.id}/items`}
+            >
+              View All Items in this Category
+            </Link>
+          </div>
           <div>
             {related_items.length ? (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -55,7 +64,10 @@ const ItemCategoryDetail: React.FC<ItemCategoryDetailProps> = ({
           </div>
         </div>
       ) : (
-        <InfoCard cardType={'error'} title={'Item Category Not Found'} />
+        <InfoCard
+          cardType={'error'}
+          title={error ? error : 'Item Category Not Found'}
+        />
       )}
     </PageWrapper>
   );

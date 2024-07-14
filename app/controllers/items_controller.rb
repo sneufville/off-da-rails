@@ -20,15 +20,17 @@ class ItemsController < ApplicationController
     end
 
     item_categories = ItemCategory.all
-    items = Item.includes(:item_category).where(filter_condition)
+    items = Item.includes(:item_category).where(filter_condition).page params[:page]
     item_count = Item.where(filter_condition).count
 
     render inertia: 'Item/Index', props: {
       item_categories: item_categories,
       items: items,
-      item_count: item_count,
+      item_count: item_count ? item_count : 0,
       selected_item_category: item_category_filter,
-      item_name_filter: item_name
+      item_name_filter: item_name,
+      # kaminari pagination
+      current_page: params[:page]
     }
   end
 

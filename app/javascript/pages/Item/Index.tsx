@@ -18,13 +18,14 @@ import type { ItemCategory, Item } from '../../@types/offDaRails';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
 import ItemCard from '../../components/shared/ItemCard/ItemCard';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
+import Paginator from '../../components/shared/Paginator/Paginator';
 
 type ItemListingProps = {
   items: Array<Item>;
   item_categories: Array<ItemCategory>;
   selected_item_category?: string;
   item_name_filter?: string;
-  item_count?: number;
+  item_count: number;
 };
 
 const ItemIndex: React.FC<ItemListingProps> = ({
@@ -187,6 +188,13 @@ const ItemIndex: React.FC<ItemListingProps> = ({
             )}
           </div>
         </section>
+      </div>
+      <div>
+        <Paginator
+          itemsPerPage={20}
+          pageTarget={'items'}
+          totalCount={item_count}
+        />
       </div>
     </PageWrapper>
   );

@@ -23,4 +23,22 @@ class ItemCategoriesController < ApplicationController
       related_items: related_items,
     }
   end
+
+  def items_for_category
+    begin
+      category_id = params[:id]
+      category = ItemCategory.find(category_id)
+      related_items = category.items.order(created_at: :desc)
+    rescue ActiveRecord::RecordNotFound
+      error = 'Failed to retrieve category and related items'
+      related_items = []
+    end
+
+    render inertia: 'ItemCategories/RelatedItemsListing', props: {
+      category: category,
+      related_items: related_items,
+      error: error,
+    }
+  end
+
 end
