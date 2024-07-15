@@ -16,4 +16,6 @@ Rails.application.routes.draw do
   resources :items, only: [:index, :show]
   resources :item_categories, only: [:index, :show]
   get '/item_categories/:id/items', to: "item_categories#items_for_category"
+  # provinces - data only route
+  resources :provinces, only: [:index]
 end
