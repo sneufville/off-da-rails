@@ -22,3 +22,26 @@ export type ItemCategory = {
 };
 
 export type InfoCardType = 'error' | 'info';
+
+export type User = {
+  id: number;
+  email: string;
+  user_type?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CustomerProfile = {
+  id: number;
+  customer_id: number;
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  street_address_1?: string;
+  street_address_2?: string;
+  city?: string;
+  province_id?: string;
+  country?: string;
+  created_at: string;
+  updated_at: string;
+};

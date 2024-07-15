@@ -13,9 +13,9 @@ class ItemsController < ApplicationController
       item_category_filter = nil
     end
 
-    if item_available == ''
-      item_available = nil
-    end
+    # if item_available == ''
+    #   item_available = nil
+    # end
 
     filter_condition = []
     extra_conditions = []
@@ -28,16 +28,16 @@ class ItemsController < ApplicationController
       filter_condition = ["item_name LIKE ? AND item_category_id = ?", "%#{item_name}%", item_category_filter]
     end
 
-    if item_available.in? [true, false]
-      extra_conditions = ["is_available = ?", item_available]
-    end
+    # if item_available.in? [true, false]
+    #   extra_conditions = ["is_available = ?", item_available]
+    # end
 
     item_categories = ItemCategory.all
-    if extra_conditions.length
-      items = Item.includes(:item_category).where(filter_condition).where(extra_conditions).page params[:page]
-    else
+    # if extra_conditions.length
+    #   items = Item.includes(:item_category).where(filter_condition).where(extra_conditions).page params[:page]
+    # else
       items = Item.includes(:item_category).where(filter_condition).page params[:page]
-    end
+    # end
     item_count = Item.where(filter_condition).count
 
     render inertia: 'Item/Index', props: {
