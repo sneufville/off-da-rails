@@ -8,6 +8,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import type { Item, ItemCategory } from '../../../@types/offDaRails';
 import Tag from '../Tag/Tag';
+import { BsFillCartPlusFill } from 'react-icons/bs';
 
 type ItemCardProps = {
   item: Item;
@@ -33,6 +34,12 @@ const ItemCard: React.FC<ItemCardProps> = ({
         {itemCategory ? (
           <Tag tagText={itemCategory.category_name} />
         ) : undefined}
+        <div>
+          <button className="p-2 rounded flex items-center gap-x-2 bg-indigo-600 text-white hover:bg-indigo-400">
+            <BsFillCartPlusFill />
+            Add to Bag
+          </button>
+        </div>
       </div>
     </div>
   );

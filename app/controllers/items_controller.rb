@@ -2,6 +2,8 @@ class ItemsController < ApplicationController
   def index
     item_category_filter = params[:item_category] || nil
     item_name = params[:item_name] || nil
+    item_available = params[:item_available] || nil
+    show_recent = params[:show_recent] || nil
 
     if item_name == ''
       item_name = nil
@@ -10,7 +12,14 @@ class ItemsController < ApplicationController
     if item_category_filter == ''
       item_category_filter = nil
     end
+
+    if item_available == ''
+      item_available = nil
+    end
+
     filter_condition = []
+    extra_conditions = []
+
     if item_name
       filter_condition = ["item_name LIKE ?", "%#{item_name}%"]
     elsif item_category_filter
@@ -19,8 +28,16 @@ class ItemsController < ApplicationController
       filter_condition = ["item_name LIKE ? AND item_category_id = ?", "%#{item_name}%", item_category_filter]
     end
 
+    if item_available.in? [true, false]
+      extra_conditions = ["is_available = ?", item_available]
+    end
+
     item_categories = ItemCategory.all
-    items = Item.includes(:item_category).where(filter_condition).page params[:page]
+    if extra_conditions.length
+      items = Item.includes(:item_category).where(filter_condition).where(extra_conditions).page params[:page]
+    else
+      items = Item.includes(:item_category).where(filter_condition).page params[:page]
+    end
     item_count = Item.where(filter_condition).count
 
     render inertia: 'Item/Index', props: {

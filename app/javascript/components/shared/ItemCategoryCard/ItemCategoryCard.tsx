@@ -7,6 +7,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import type { ItemCategory } from '../../../@types/offDaRails';
 import Tag from '../Tag/Tag';
+import { BiSolidShoppingBag } from 'react-icons/bi';
 
 type ItemCategoryCardProps = {
   category: ItemCategory;
@@ -27,7 +28,10 @@ const ItemCategoryCard: React.FC<ItemCategoryCardProps> = ({
         </Link>
       </h2>
       <p>{category.category_description}</p>
-      <Tag tagText={`Number of items: ${itemCount}`} />
+      <Tag
+        iconElement={<BiSolidShoppingBag />}
+        tagText={`Number of items: ${itemCount}`}
+      />
     </div>
   );
 };

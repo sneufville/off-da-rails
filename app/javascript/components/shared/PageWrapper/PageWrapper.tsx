@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { BiSolidShoppingBag } from 'react-icons/bi';
 
 type PageWrapperProps = {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
         <div className="flex items-center gap-x-2 px-2">
           <Link href="/items">Items</Link>
           <Link href="/item_categories">Item Categories</Link>
+          <BiSolidShoppingBag size={32} />
         </div>
       </div>
       <div id="contentArea" className="">

@@ -21,6 +21,7 @@ import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import Paginator from '../../components/shared/Paginator/Paginator';
 
 type ItemListingProps = {
+  current_page?: string;
   items: Array<Item>;
   item_categories: Array<ItemCategory>;
   selected_item_category?: string;
@@ -29,6 +30,7 @@ type ItemListingProps = {
 };
 
 const ItemIndex: React.FC<ItemListingProps> = ({
+  current_page,
   item_categories,
   items,
   selected_item_category,
@@ -191,6 +193,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
       </div>
       <div>
         <Paginator
+          currentPage={current_page}
           itemsPerPage={20}
           pageTarget={'items'}
           totalCount={item_count}

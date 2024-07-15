@@ -9,6 +9,9 @@ export type Item = {
   item_cost: number;
   item_name: string;
   item_description: string;
+  is_available: boolean;
+  updated_at: string;
+  created_at: string;
 };
 
 export type ItemCategory = {

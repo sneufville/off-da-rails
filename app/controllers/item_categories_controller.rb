@@ -1,8 +1,15 @@
 class ItemCategoriesController < ApplicationController
   def index
     item_categories = ItemCategory.all
+    category_counts = {}
+    item_categories.each do |category|
+      if category.id
+        category_counts[category.id] = category.items.count
+      end
+    end
     render inertia: 'ItemCategories/ItemCategoryListing', props: {
-      categories: item_categories
+      categories: item_categories,
+      category_counts: category_counts
     }
   end
 
