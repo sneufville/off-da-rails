@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import {
   Menu,
   MenuButton,
@@ -51,9 +51,12 @@ const UserAccountButton: React.FC<UserAccountButtonProps> = ({ user }) => {
           </MenuItem>
           <MenuSeparator className="my-1 h-px bg-white/6" />
           <MenuItem>
-            <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+            <Link
+              href="/customer_profiles/me"
+              className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+            >
               My Profile
-            </button>
+            </Link>
           </MenuItem>
           <MenuItem>
             <button

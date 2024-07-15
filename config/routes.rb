@@ -17,9 +17,10 @@ Rails.application.routes.draw do
   resources :item_categories, only: [:index, :show]
   get '/item_categories/:id/items', to: "item_categories#items_for_category"
   # provinces - data only route
-  resources :provinces, only: [:index]
+  get '/api/provinces', to: 'provinces#index'
   # customer profile
   # resources :customer_profiles, only: [:index]
+  get '/customer_profiles/check', to: 'customer_profiles#get_current_profile'
   get '/customer_profiles/me', to: 'customer_profiles#index'
   put '/customer_profiles/me', to: 'customer_profiles#create_or_update_profile'
 end

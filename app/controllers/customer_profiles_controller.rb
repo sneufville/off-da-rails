@@ -2,9 +2,16 @@ class CustomerProfilesController < ApplicationController
   before_action :authenticate_user!, :get_profile, only: [:index, :create_or_update_profile]
 
   # get the current profile, i.e profile for the logged in user
+
+  def get_current_profile
+    render json: {
+      current_profile: @current_profile
+    }
+  end
+
   def index
 
-    render json: {
+    render inertia: 'CustomerProfiles/CustomerProfile', props: {
       'current_profile': @current_profile
     }
   end

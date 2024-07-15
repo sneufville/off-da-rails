@@ -32,16 +32,28 @@ export type User = {
 };
 
 export type CustomerProfile = {
-  id: number;
-  customer_id: number;
   first_name?: string;
   last_name?: string;
   phone_number?: string;
   street_address_1?: string;
   street_address_2?: string;
   city?: string;
-  province_id?: string;
+  province_id?: number;
   country?: string;
   created_at: string;
   updated_at: string;
+};
+
+export type Province = {
+  id: number;
+  province: string;
+  abbreviation: string;
+};
+
+export type APIResponse = {
+  success: boolean;
+  data: Array<Object> | Object | undefined;
+  errors: Array<{
+    message: string;
+  }>;
 };
