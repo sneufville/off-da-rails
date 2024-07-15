@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_10_170311) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_15_153118) do
   create_table "about_pages", force: :cascade do |t|
     t.string "page_title"
     t.text "content"
@@ -105,6 +105,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_10_170311) do
     t.integer "item_cost"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_available"
   end
 
   create_table "provinces", force: :cascade do |t|
