@@ -24,4 +24,6 @@ Rails.application.routes.draw do
   get '/customer_profiles/me', to: 'customer_profiles#index'
   post '/customer_profiles/me', to: 'customer_profiles#create_or_update_profile'
   put '/customer_profiles/me', to: 'customer_profiles#create_or_update_profile'
+  # customer orders and cart
+  get '/api/customer_orders/cart', to: 'customer_orders#cart'
 end

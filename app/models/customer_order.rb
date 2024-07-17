@@ -1,6 +1,7 @@
 class CustomerOrder < ApplicationRecord
   # validations
-  validates :customer_id, :order_total, :order_item_count, :transaction_id, :order_state, presence: true
+  validates :user_id, :order_state, presence: true
+  validates :order_total, :order_item_count, numericality: {greater_than_or_equal_to: 0}
 
   # relationships
   belongs_to :user
