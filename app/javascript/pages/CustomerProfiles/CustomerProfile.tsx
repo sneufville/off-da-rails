@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { router, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { BsCheckCircleFill, BsInfoSquare } from 'react-icons/bs';
 import type {
   AppDialogType,
@@ -48,7 +48,6 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
     post: postForm,
     processing,
     put: updateForm,
-    errors: formErrors,
   } = useForm({
     city: '',
     country: '',
@@ -80,7 +79,6 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
 
   React.useEffect(() => {
     if (submission_errors && Object.keys(submission_errors).length) {
-      console.info('has submission errors');
       setResponseDialogContent({
         title: 'Profile Not Updated',
         content: 'There were errors with your submission.',
@@ -118,7 +116,6 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
       if (formData.province_id < 1) {
         return console.error('Invalid Province Id');
       }
-      console.log('try to submit profile form');
       const _token = csrf_token as string;
       const data = { profile: formData, _token };
       postForm('/customer_profiles/me', { data });
