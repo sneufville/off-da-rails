@@ -27,7 +27,7 @@ const UserAccountButton: React.FC<UserAccountButtonProps> = ({ user }) => {
     React.useState<boolean>(false);
 
   const logoutAction = React.useCallback(() => {
-    router.visit('/users/sign_out', { method: 'delete' });
+    router.delete('/users/sign_out');
   }, []);
 
   return (

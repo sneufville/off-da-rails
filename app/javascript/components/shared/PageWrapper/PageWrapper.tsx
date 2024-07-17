@@ -31,7 +31,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
           {_user ? (
             <UserAccountButton user={_user} />
           ) : (
-            <Link href="/users/sign_in">Sign Up</Link>
+            <a href="/users/sign_in">Sign Up</a>
           )}
         </div>
       </div>
