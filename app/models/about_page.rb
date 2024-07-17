@@ -1,5 +1,5 @@
 class AboutPage < ApplicationRecord
-  validates :page_title, presence: true
+  validates :page_title, uniqueness: true, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
     ["content", "created_at", "id", "id_value", "page_title", "updated_at"]
