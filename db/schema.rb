@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_17_221949) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
   create_table "about_pages", force: :cascade do |t|
     t.string "page_title"
     t.text "content"
@@ -55,7 +55,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_221949) do
 
   create_table "customer_order_items", force: :cascade do |t|
     t.integer "item_id"
-    t.integer "order_id"
+    t.integer "customer_order_id"
     t.integer "item_cost"
     t.string "item_name"
     t.integer "item_qty"
