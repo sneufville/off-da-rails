@@ -1,5 +1,6 @@
 class CustomerProfilesController < ApplicationController
   before_action :authenticate_user!, :get_profile, only: [:index, :create_or_update_profile]
+  protect_from_forgery
 
   # get the current profile, i.e profile for the logged in user
 
@@ -12,42 +13,70 @@ class CustomerProfilesController < ApplicationController
   def index
 
     render inertia: 'CustomerProfiles/CustomerProfile', props: {
-      'current_profile': @current_profile
+      customer_profile: @current_profile,
+      profile_id: @current_profile ? @current_profile.id : nil
+    }
+  end
+
+  def create_or_update
+    # check if the user has a profile already and update instead
+
+    render inertia: 'CustomerProfiles/CustomerProfile', props: {
+      customer_profile: @current_profile
     }
   end
 
   def create_or_update_profile
-    profile_params = params.require(:profile).permit(:first_name, :last_name)
-    profile_params[:customer_id] = @current_profile.customer_id
+    _params = profile_params
     begin
       # try to create or update the user's existing profile
       if @current_profile
         # update the current profile
-        profile = CustomerProfile.update(profile_params)
+        if @current_profile.update(_params)
+          render inertia: 'CustomerProfiles/CustomerProfile', props: {
+            success: true,
+            customer_profile: @current_profile,
+          }
+        else
+          render inertia: 'CustomerProfiles/CustomerProfile', props: {
+            success: false,
+            form_data: params,
+            submissions_errors: profile.errors
+          }, status: :unprocessable_content
+        end
+
       else
-        profile = CustomerProfile.new(profile_params)
+        profile = CustomerProfile.new(_params)
+        profile.user_id = current_user.id
+        if profile.save
+          @current_profile = profile
+          render inertia: 'CustomerProfiles/CustomerProfile', props: {
+            success: true,
+            profile: profile
+          }
+        else
+          render inertia: 'CustomerProfiles/CustomerProfile', props: {
+            success: false,
+            profile: nil,
+            form_data: params,
+            submission_errors: profile.errors
+          }, status: :unprocessable_content
+        end
       end
 
-      if profile.save
-        render json: {
-          success: true,
-          profile: profile
-        }
-      else
-        render json: {
-          success: false,
-          profile: nil,
-          errors: profile.errors.full_messages
-        }, status: :unprocessable_content
-      end
+
     end
   end
 
   private
+  def profile_params
+    params.require(:customer_profile).permit(:first_name, :last_name, :city, :country, :phone_number, :street_address_1, :street_address_2, :province_id)
+  end
+
   def get_profile
     begin
-      @current_profile = CustomerProfile.find_by(:customer_id => current_user.id)
-    rescue ActiveRecord::RecordNotFound
+      @current_profile = CustomerProfile.find_by(:user_id => current_user.id)
+    rescue
       @current_profile = nil
     end
   end

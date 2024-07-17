@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { BiSolidShoppingBag, BiSolidUserAccount } from 'react-icons/bi';
+import { BiSolidShoppingBag } from 'react-icons/bi';
 import UserAccountButton from '../UserAccountButton/UserAccountButton';
 import { User } from '../../../@types/offDaRails';
 

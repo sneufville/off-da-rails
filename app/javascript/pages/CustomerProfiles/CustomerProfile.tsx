@@ -5,18 +5,46 @@
  */
 
 import React from 'react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { BsCheckCircleFill, BsInfoSquare } from 'react-icons/bs';
-import type { CustomerProfile, Province } from '../../@types/offDaRails';
+import type { CustomerProfile, Province, User } from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import ApiUtils from '../../utils/apiUtils';
+import FormError from '../../components/shared/FormError/FormError';
 
 type CustomerProfileProps = {
   customer_profile?: CustomerProfile;
+  form_data?: CustomerProfile;
+  profile_id?: number;
+  submission_errors?: Record<string, string[]>;
 };
 
 const CustomerProfile: React.FC<CustomerProfileProps> = ({
   customer_profile,
+  profile_id,
+  submission_errors,
+  form_data,
 }) => {
+  const { current_user, csrf_token } = usePage().props;
+  const _user = current_user as User;
+
+  const {
+    data: formData,
+    setData: setFormData,
+    post: postForm,
+    processing,
+    put: updateForm,
+    errors: formErrors,
+  } = useForm({
+    city: '',
+    country: '',
+    first_name: '',
+    last_name: '',
+    phone_number: '',
+    province_id: 0,
+    street_address_1: '',
+    street_address_2: '',
+  });
   const [profile, setProfile] = React.useState<CustomerProfile>({
     city: '',
     country: '',
@@ -40,15 +68,34 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
   }, []);
 
   React.useEffect(() => {
-    if (customer_profile) setProfile(customer_profile);
+    console.log('type of customer_profile is: ', typeof customer_profile);
+    if (typeof customer_profile !== 'undefined') {
+      console.info('set customer profile on load');
+      setFormData({
+        first_name: customer_profile.first_name ?? '',
+        last_name: customer_profile.last_name ?? '',
+        province_id: customer_profile.province_id ?? 0,
+        city: customer_profile.city ?? '',
+        country: customer_profile.country ?? '',
+        phone_number: customer_profile.phone_number ?? '',
+        street_address_1: customer_profile.street_address_1 ?? '',
+        street_address_2: customer_profile.street_address_2 ?? '',
+      });
+    }
   }, [customer_profile]);
 
   const submitProfileForm = React.useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      if (formData.province_id < 1) {
+        return console.error('Invalid Province Id');
+      }
       console.log('try to submit profile form');
+      const _token = csrf_token as string;
+      const data = { profile: formData, _token };
+      postForm('/customer_profiles/me', { data });
     },
-    [profile]
+    [formData, _user, csrf_token]
   );
 
   return (
@@ -82,14 +129,15 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="first_name"
                 id="firstName"
                 placeholder="First Name"
-                value={profile.first_name}
-                onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    first_name: e.target.value,
-                  }))
-                }
+                value={formData.first_name}
+                onChange={(e) => setFormData('first_name', e.target.value)}
               />
+              {submission_errors?.first_name ? (
+                <FormError
+                  fieldLabel="First Name"
+                  message={submission_errors?.first_name[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="lastName">Last Name*</label>
@@ -99,14 +147,15 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="last_name"
                 id="lastName"
                 placeholder="Last Name"
-                value={profile.last_name}
-                onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    last_name: e.target.value,
-                  }))
-                }
+                value={formData.last_name}
+                onChange={(e) => setFormData('last_name', e.target.value)}
               />
+              {submission_errors?.last_name ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.last_name[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="phoneNumber">Phone</label>
@@ -116,14 +165,15 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="phone_number"
                 id="phoneNumber"
                 placeholder="eg. 204-555-1234"
-                value={profile.phone_number}
-                onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    phone_number: e.target.value,
-                  }))
-                }
+                value={formData.phone_number}
+                onChange={(e) => setFormData('phone_number', e.target.value)}
               />
+              {submission_errors?.phone_number ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.phone_number[0]}
+                />
+              ) : undefined}
             </div>
           </div>
           <h3 className="text-xl font-semibold">Address Information</h3>
@@ -136,14 +186,17 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="street_address_1"
                 id="streetAddress1"
                 placeholder="Street Address 1"
-                value={profile.street_address_1}
+                value={formData.street_address_1}
                 onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    street_address_1: e.target.value,
-                  }))
+                  setFormData('street_address_1', e.target.value)
                 }
               />
+              {submission_errors?.street_address_1 ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.street_address_1[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="streetAddress2">Street Address Line 2</label>
@@ -153,14 +206,17 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="street_address_2"
                 id="streetAddress2"
                 placeholder="eg. Unit 1000"
-                value={profile.street_address_2}
+                value={formData.street_address_2}
                 onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    street_address_2: e.target.value,
-                  }))
+                  setFormData('street_address_2', e.target.value)
                 }
               />
+              {submission_errors?.street_address_2 ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.street_address_2[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="city">City</label>
@@ -170,14 +226,15 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="city"
                 id="city"
                 placeholder="Eg. Winnipeg"
-                value={profile.city}
-                onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    city: e.target.value,
-                  }))
-                }
+                value={formData.city}
+                onChange={(e) => setFormData('city', e.target.value)}
               />
+              {submission_errors?.city ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.city[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="province">Province</label>
@@ -185,12 +242,9 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 className="h-10 p-1 rounded"
                 name="province"
                 id="province"
-                value={profile.province_id}
-                onChange={(event) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    province_id: parseInt(event.target.value),
-                  }))
+                value={formData.province_id}
+                onChange={(e) =>
+                  setFormData('province_id', parseInt(e.target.value))
                 }
               >
                 <option value="">Select Province</option>
@@ -203,6 +257,12 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                   </option>
                 ))}
               </select>
+              {submission_errors?.province ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.province[0]}
+                />
+              ) : undefined}
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="country">Country</label>
@@ -211,14 +271,15 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
                 name="country"
                 id="country"
                 placeholder="eg. Canada"
-                value={profile.country}
-                onChange={(e) =>
-                  setProfile((prevState) => ({
-                    ...prevState,
-                    country: e.target.value,
-                  }))
-                }
+                value={formData.country}
+                onChange={(e) => setFormData('country', e.target.value)}
               />
+              {submission_errors?.country ? (
+                <FormError
+                  fieldLabel="Last Name"
+                  message={submission_errors.country[0]}
+                />
+              ) : undefined}
             </div>
           </div>
           <div className="w-full">
