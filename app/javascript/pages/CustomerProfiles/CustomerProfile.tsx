@@ -20,7 +20,7 @@ import AppDialog from '../../components/shared/AppDialog/AppDialog';
 
 type CustomerProfileProps = {
   profile_updated?: boolean;
-  customer_profile?: CustomerProfile;
+  customer_profile: CustomerProfile | null;
   form_data?: CustomerProfile;
   profile_id?: number;
   submission_errors?: Record<string, string[]>;
@@ -96,7 +96,7 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
   }, [profile_updated, submission_errors, customer_profile]);
 
   React.useEffect(() => {
-    if (typeof customer_profile !== 'undefined') {
+    if (customer_profile) {
       setFormData({
         first_name: customer_profile.first_name ?? '',
         last_name: customer_profile.last_name ?? '',
