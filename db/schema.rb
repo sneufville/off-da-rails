@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_15_153118) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_162253) do
   create_table "about_pages", force: :cascade do |t|
     t.string "page_title"
     t.text "content"
@@ -77,7 +77,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_15_153118) do
   end
 
   create_table "customer_profiles", force: :cascade do |t|
-    t.integer "customer_id"
+    t.integer "user_id"
     t.string "first_name"
     t.string "last_name"
     t.string "phone_number"
