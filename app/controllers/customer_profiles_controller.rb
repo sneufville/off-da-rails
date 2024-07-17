@@ -18,14 +18,6 @@ class CustomerProfilesController < ApplicationController
     }
   end
 
-  def create_or_update
-    # check if the user has a profile already and update instead
-
-    render inertia: 'CustomerProfiles/CustomerProfile', props: {
-      customer_profile: @current_profile
-    }
-  end
-
   def create_or_update_profile
     _params = profile_params
     begin
@@ -34,14 +26,15 @@ class CustomerProfilesController < ApplicationController
         # update the current profile
         if @current_profile.update(_params)
           render inertia: 'CustomerProfiles/CustomerProfile', props: {
-            success: true,
+            profile_updated: true,
             customer_profile: @current_profile,
           }
         else
           render inertia: 'CustomerProfiles/CustomerProfile', props: {
-            success: false,
+            profile_updated: false,
             form_data: params,
-            submissions_errors: profile.errors
+            customer_profile: @current_profile,
+            submission_errors: @current_profile.errors
           }, status: :unprocessable_content
         end
 
@@ -51,13 +44,13 @@ class CustomerProfilesController < ApplicationController
         if profile.save
           @current_profile = profile
           render inertia: 'CustomerProfiles/CustomerProfile', props: {
-            success: true,
-            profile: profile
+            profile_updated: true,
+            customer_profile: profile
           }
         else
           render inertia: 'CustomerProfiles/CustomerProfile', props: {
-            success: false,
-            profile: nil,
+            profile_updated: false,
+            customer_profile: nil,
             form_data: params,
             submission_errors: profile.errors
           }, status: :unprocessable_content

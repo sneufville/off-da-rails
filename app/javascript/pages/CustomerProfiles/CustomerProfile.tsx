@@ -7,16 +7,29 @@
 import React from 'react';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { BsCheckCircleFill, BsInfoSquare } from 'react-icons/bs';
-import type { CustomerProfile, Province, User } from '../../@types/offDaRails';
+import type {
+  AppDialogType,
+  CustomerProfile,
+  Province,
+  User,
+} from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import ApiUtils from '../../utils/apiUtils';
 import FormError from '../../components/shared/FormError/FormError';
+import AppDialog from '../../components/shared/AppDialog/AppDialog';
 
 type CustomerProfileProps = {
+  profile_updated?: boolean;
   customer_profile?: CustomerProfile;
   form_data?: CustomerProfile;
   profile_id?: number;
   submission_errors?: Record<string, string[]>;
+};
+
+type CustomerProfileUpdateResponse = {
+  content: string;
+  dialogType: AppDialogType;
+  title: string;
 };
 
 const CustomerProfile: React.FC<CustomerProfileProps> = ({
@@ -24,6 +37,7 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
   profile_id,
   submission_errors,
   form_data,
+  profile_updated,
 }) => {
   const { current_user, csrf_token } = usePage().props;
   const _user = current_user as User;
@@ -45,19 +59,16 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
     street_address_1: '',
     street_address_2: '',
   });
-  const [profile, setProfile] = React.useState<CustomerProfile>({
-    city: '',
-    country: '',
-    created_at: '',
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    province_id: -1,
-    street_address_1: '',
-    street_address_2: '',
-    updated_at: '',
-  });
+
   const [provinces, setProvinces] = React.useState<Array<Province>>([]);
+  const [responseDialogContent, setResponseDialogContent] =
+    React.useState<CustomerProfileUpdateResponse>({
+      title: '',
+      content: '',
+      dialogType: 'info',
+    });
+  const [responseDialogOpen, setResponseDialogOpen] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     ApiUtils.fetchProvinces()
@@ -68,9 +79,26 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
   }, []);
 
   React.useEffect(() => {
-    console.log('type of customer_profile is: ', typeof customer_profile);
+    if (submission_errors && Object.keys(submission_errors).length) {
+      console.info('has submission errors');
+      setResponseDialogContent({
+        title: 'Profile Not Updated',
+        content: 'There were errors with your submission.',
+        dialogType: 'error',
+      });
+      setResponseDialogOpen(true);
+    } else if (profile_updated) {
+      setResponseDialogContent({
+        title: 'Profile Updated',
+        content: 'Your profile was successfully updated',
+        dialogType: 'success',
+      });
+      setResponseDialogOpen(true);
+    }
+  }, [profile_updated, submission_errors, customer_profile]);
+
+  React.useEffect(() => {
     if (typeof customer_profile !== 'undefined') {
-      console.info('set customer profile on load');
       setFormData({
         first_name: customer_profile.first_name ?? '',
         last_name: customer_profile.last_name ?? '',
@@ -292,6 +320,13 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
             </button>
           </div>
         </form>
+        <AppDialog
+          dialogDismiss={() => setResponseDialogOpen(false)}
+          dialogOpen={responseDialogOpen}
+          dialogType={responseDialogContent.dialogType}
+          title={responseDialogContent.title}
+          content={responseDialogContent.content}
+        />
       </div>
     </PageWrapper>
   );

@@ -57,3 +57,5 @@ export type APIResponse = {
     message: string;
   }>;
 };
+
+export type AppDialogType = 'error' | 'info' | 'success' | 'warning';
