@@ -22,5 +22,6 @@ Rails.application.routes.draw do
   # resources :customer_profiles, only: [:index]
   get '/customer_profiles/check', to: 'customer_profiles#get_current_profile'
   get '/customer_profiles/me', to: 'customer_profiles#index'
+  post '/customer_profiles/me', to: 'customer_profiles#create_or_update_profile'
   put '/customer_profiles/me', to: 'customer_profiles#create_or_update_profile'
 end

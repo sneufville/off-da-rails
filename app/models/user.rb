@@ -5,5 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   # relationships
-  has_one :customer_profile
+  has_one :customer_profile, dependent: :destroy
 end

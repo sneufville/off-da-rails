@@ -10,7 +10,7 @@ class Item < ApplicationRecord
   has_many :customer_order_items
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "id", "id_value", "item_category_id", "item_cost", "item_description", "item_name", "updated_at"]
+    ["created_at", "id", "id_value", "item_category_id", "item_cost", "item_description", "item_name", "updated_at", "is_available"]
   end
 
   def self.ransackable_associations(auth_object = nil)
