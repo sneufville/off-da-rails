@@ -4,7 +4,7 @@
  * project  off_da_rails_coffee
  */
 import React from 'react';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import {
   Combobox,
   ComboboxButton,
@@ -19,6 +19,7 @@ import InfoCard from '../../components/shared/InfoCard/InfoCard';
 import ItemCard from '../../components/shared/ItemCard/ItemCard';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import Paginator from '../../components/shared/Paginator/Paginator';
+import ApiUtils from '../../utils/apiUtils';
 
 type ItemListingProps = {
   current_page?: string;
@@ -37,6 +38,8 @@ const ItemIndex: React.FC<ItemListingProps> = ({
   item_name_filter,
   item_count,
 }) => {
+  const { csrf_token } = usePage().props;
+  console.log('load item listing with csrf_token: ', csrf_token);
   const [itemNameFilter, setItemNameFilter] = React.useState<string>('');
   const [categoryQuery, setCategoryQuery] = React.useState<string>('');
   const [selectedCategory, setSelectedCategory] =
@@ -89,6 +92,31 @@ const ItemIndex: React.FC<ItemListingProps> = ({
       return item_categories.find((c) => c.id === item.id);
     },
     [item_categories]
+  );
+
+  const execAddItemToCart = React.useCallback(
+    (item: Item, count?: number) => {
+      const _addToCart = async () => {
+        const token = document
+          .querySelector('meta[name="csrf-token"]')!
+          .getAttribute('content');
+        if (!token) return;
+        const response = await ApiUtils.addItemToCart({
+          itemId: item.id,
+          itemCount: count ? count : 1,
+          _token: token,
+        });
+        if (response.success) {
+          // partial reload
+          router.reload({
+            only: ['cart', 'cart_items'],
+          });
+        }
+      };
+
+      _addToCart().then();
+    },
+    [csrf_token]
   );
 
   return (
@@ -178,6 +206,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
                     key={`item-${item.id}`}
                     item={item}
                     itemCategory={getCategoryForItem(item)}
+                    addItemAction={(item) => execAddItemToCart(item)}
                   />
                 ))}
               </div>

@@ -14,12 +14,14 @@ type ItemCardProps = {
   item: Item;
   itemCategory?: ItemCategory;
   linkBase?: string;
+  addItemAction?: (item: Item) => void;
 };
 
 const ItemCard: React.FC<ItemCardProps> = ({
   item,
   itemCategory,
   linkBase,
+  addItemAction,
 }) => {
   return (
     <div className="p-2 bg-gray-50 rounded w-full">
@@ -35,7 +37,12 @@ const ItemCard: React.FC<ItemCardProps> = ({
           <Tag tagText={itemCategory.category_name} />
         ) : undefined}
         <div>
-          <button className="p-2 rounded flex items-center gap-x-2 bg-indigo-600 text-white hover:bg-indigo-400">
+          <button
+            className="p-2 rounded flex items-center gap-x-2 bg-indigo-600 text-white hover:bg-indigo-400"
+            onClick={() =>
+              typeof addItemAction === 'function' ? addItemAction(item) : {}
+            }
+          >
             <BsFillCartPlusFill />
             Add to Bag
           </button>

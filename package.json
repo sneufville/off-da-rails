@@ -6,6 +6,7 @@
     "@headlessui/react": "^2.1.2",
     "@inertiajs/react": "^1.2.0",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.7.2",
     "date-fns": "^3.6.0",
     "lottie-react": "^2.4.0",
     "postcss": "^8.4.39",

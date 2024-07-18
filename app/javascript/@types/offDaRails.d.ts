@@ -52,10 +52,28 @@ export type Province = {
 
 export type APIResponse = {
   success: boolean;
-  data: Array<Object> | Object | undefined;
-  errors: Array<{
+  message: string;
+  data?: Array<Object> | Object | undefined;
+  errors?: Array<{
     message: string;
   }>;
 };
 
 export type AppDialogType = 'error' | 'info' | 'success' | 'warning';
+
+export type Cart = {
+  id: number;
+  order_total: number;
+  order_item_count: number;
+};
+
+export type CustomerOrderItem = {
+  id: number;
+  item_id: number;
+  customer_order_id: number;
+  item_cost: number;
+  item_name: string;
+  item_qty: number;
+  tax_amount: number;
+  item_total_cost: number;
+};

@@ -7,15 +7,18 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { BiSolidShoppingBag } from 'react-icons/bi';
 import UserAccountButton from '../UserAccountButton/UserAccountButton';
-import { User } from '../../../@types/offDaRails';
+import { Cart, CustomerOrderItem, User } from '../../../@types/offDaRails';
+import CartButton from '../CartButton/CartButton';
 
 type PageWrapperProps = {
   children: React.ReactNode;
 };
 
 const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
-  const { current_user } = usePage().props;
+  const { current_user, cart, cart_items } = usePage().props;
   const _user = current_user as User;
+  const _cart = cart as Cart;
+  const _cart_items = cart_items as CustomerOrderItem[];
   console.log('from page wrapper -> current_user: ', current_user);
   return (
     <div className="flex flex-col">
@@ -29,7 +32,10 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
           <Link href="/item_categories">Item Categories</Link>
           <BiSolidShoppingBag size={32} />
           {_user ? (
-            <UserAccountButton user={_user} />
+            <>
+              <CartButton cart={_cart} cartItems={_cart_items} />
+              <UserAccountButton user={_user} />
+            </>
           ) : (
             <a href="/users/sign_in">Sign Up</a>
           )}
