@@ -1,8 +1,15 @@
 class CustomerOrdersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, :get_customer_cart, :get_customer_cart_items
   after_action :refresh_cart
 
-  def cart
+  # -- Normal Views --
+  def customer_cart
+
+    render inertia: 'CustomerOrders/CustomerCart'
+  end
+
+  # -- API Routes --
+  def api_cart
     cart = get_customer_cart
     cart_items = CustomerOrderItem.find_by(:customer_order_id => cart.id)
     render json: {
@@ -11,13 +18,13 @@ class CustomerOrdersController < ApplicationController
     }
   end
 
-  def add_to_cart
+  def api_add_to_cart
     cart = get_customer_cart
     # permit_params = params.require(:customer_order).permit(:item_qty)
     # retrieve the item and prepare to add the relevant
     begin
       related_item = Item.find(params[:id])
-    rescue ActiveRecordError::RecordNotFound
+    rescue ActiveRecord::RecordNotFound
       return render json: {
         success: false,
         error: 'Related item not found'
@@ -72,9 +79,41 @@ class CustomerOrdersController < ApplicationController
     end
   end
 
+  def api_delete_from_cart
+    cart = get_customer_cart
+    begin
+      related_item = Item.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: {
+        success: false,
+        message: 'Item not found'
+      }
+    end
+
+    # look up item in cart
+    cart_item = CustomerOrderItem.find_by(:item_id => related_item.id)
+    unless cart_item
+      return render json: {
+        success: false,
+        message: 'Item was not found in cart'
+      }
+    end
+
+    cart_item.destroy
+    # todo: recalculate totals
+
+    render json: {
+      success: true,
+      message: 'Item removed. Your cart has been updated'
+    }
+  end
+
   # inertia cart refresher
   inertia_share do
-    :refresh_cart
+    {
+      'cart' => @customer_cart,
+      'cart_items' => @cart_items
+    }
   end
 
   # cart related helper methods
@@ -89,12 +128,29 @@ class CustomerOrdersController < ApplicationController
     @cart_items = CustomerOrderItem.all.where(:customer_order_id => @customer_cart.id)
   end
 
+  def recalculate_cart_total
+    cart = get_customer_cart
+    cart_items = get_customer_cart_items
+
+    cart_total = 0
+    item_count = 0
+    if cart_items.length > 0
+      cart_items.each do |item|
+        item_count += item.item_qty
+      end
+    end
+
+    cart.order_total = cart_total
+    cart.order_item_count = item_count
+    cart.save
+  end
+
   def refresh_cart
     puts "refresh cart data"
-    {
-      'cart' => @customer_cart,
-      'cart_items' => @cart_items
-    }
+    # {
+    #   'cart' => @customer_cart,
+    #   'cart_items' => @cart_items
+    # }
   end
 
   def customer_orders_items_params
