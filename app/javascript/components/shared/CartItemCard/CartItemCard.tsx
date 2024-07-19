@@ -11,20 +11,36 @@ import type {
 } from '../../../@types/offDaRails';
 import { BiSolidTrash } from 'react-icons/bi';
 import QuestionDialog from '../QuestionDialog/QuestionDialog';
+import {
+  BsCheckCircleFill,
+  BsDashLg,
+  BsDashSquareFill,
+  BsPlusLg,
+  BsPlusSquareFill,
+} from 'react-icons/bs';
 
 type CartItemCardProps = {
   item: CustomerOrderItem;
   itemCategory?: ItemCategory;
   deleteItemAction?: (item: CustomerOrderItem) => void;
+  setQuantityAction?: (quantity: number) => void;
 };
 
 const CartItemCard: React.FC<CartItemCardProps> = ({
+  setQuantityAction,
   deleteItemAction,
   item,
   itemCategory,
 }) => {
   const [showDeletePrompt, setShowDeletePrompt] =
     React.useState<boolean>(false);
+  const [itemQuantity, setItemQuantity] = React.useState<number>(1);
+
+  React.useEffect(() => {
+    setItemQuantity(item.item_qty);
+  }, [item.item_qty]);
+
+  // React.useEffect(() => {}, [itemQuantity])
 
   return (
     <div className="p-2 rounded bg-slate-50 flex items-center gap-2">
@@ -36,6 +52,20 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         </p>
       </div>
       <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <button className="p-2 rounded text-white bg-slate-700">
+            <BsPlusLg size={24} />
+          </button>
+          <span>
+            Quantity: <span className="font-bold">{itemQuantity}</span>
+          </span>
+          <button className="p-2 rounded text-white bg-slate-700">
+            <BsDashLg size={24} />
+          </button>
+          <button className="bg-green-600 rounded text-white p-2">
+            <BsCheckCircleFill size={24} />
+          </button>
+        </div>
         <button
           className="bg-red-600 hover:cursor-pointer flex items-center gap-x-2 text-white hover:bg-red-500 duration-200 p-2 rounded"
           onClick={() => setShowDeletePrompt(true)}
