@@ -12,7 +12,18 @@ type AddItemProps = {
   _token: string;
 };
 
+type CartAPIRequestProps = {
+  itemId: number;
+  token: string;
+};
+
 export default class ApiUtils {
+  static buildAPIRequestHeaders(token: string) {
+    return {
+      'content-type': 'application/json',
+      'X-CSRF-TOKEN': token,
+    };
+  }
   static async fetchProvinces(): Promise<Province[]> {
     try {
       const url = '/api/provinces';
@@ -48,6 +59,23 @@ export default class ApiUtils {
         'Failed to add item to cart with error: ',
         (e as Error).message
       );
+      return {
+        success: false,
+        message: (e as Error).message,
+      };
+    }
+  }
+
+  static async removeItemFromCart({
+    itemId,
+    token,
+  }: CartAPIRequestProps): Promise<APIResponse> {
+    const headers = this.buildAPIRequestHeaders(token);
+    try {
+      const url = `/api/customer_orders/cart/${itemId}`;
+      const { data: responseData } = await axios.delete(url, { headers });
+      return responseData as APIResponse;
+    } catch (e) {
       return {
         success: false,
         message: (e as Error).message,
