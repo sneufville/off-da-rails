@@ -34,6 +34,16 @@ class CustomerOrdersController < ApplicationController
     # retrieve tax entries
     tax_total = 0
     tax_entries = get_tax_entries
+
+    puts tax_entries.inspect
+    # if no tax entries, return an error to tell the user to create a profile
+    unless tax_entries || tax_entries.length < 1
+      return render json: {
+        success: false,
+        error: 'Profile not setup yet.'
+      }, status: :bad_request
+    end
+
     tax_entries.each do |entry|
       tax_total += entry.tax_amt
     end
@@ -79,6 +89,38 @@ class CustomerOrdersController < ApplicationController
     end
   end
 
+  def api_update_cart_item_qty
+    cart = get_customer_cart
+
+    # cart item
+    begin
+      related_cart_item = CustomerOrderItem.find_by(:customer_order_id => cart.id, :id => params[:id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: {
+        success: false,
+        message: 'Item not found'
+      }, status: :not_found
+    end
+
+    _params = customer_orders_items_params
+
+    if _params['item_qty'] == 0
+      return render json: {
+        success: false,
+        message: 'Invalid quantity set'
+      }
+    end
+
+    related_cart_item.item_qty = _params['item_qty']
+    related_cart_item.save
+
+    render json: {
+      success: true,
+      message: 'Cart updated.'
+    }
+
+  end
+
   def api_delete_from_cart
     cart = get_customer_cart
     begin
@@ -91,7 +133,7 @@ class CustomerOrdersController < ApplicationController
     end
 
     # look up item in cart
-    cart_item = CustomerOrderItem.find_by(:item_id => related_item.id)
+    cart_item = CustomerOrderItem.find_by(:id => related_item.id, :customer_order_id => cart.id)
     unless cart_item
       return render json: {
         success: false,
@@ -160,14 +202,14 @@ class CustomerOrdersController < ApplicationController
   def get_tax_entries
     @customer_profile = CustomerProfile.find_by(:user_id => current_user.id)
 
-    begin
-      if @customer_profile
-           return ProvincialTax.find_by(:province_id => @customer_profile.province_id)
-      else
-        return []
+    if @customer_profile
+      begin
+        ProvincialTax.all.where(:province_id => @customer_profile.province_id)
+      rescue ActiveRecord::RecordNotFound
+        []
       end
-    rescue ActiveRecord::RecordNotFound
-      return []
+    else
+      []
     end
   end
 end

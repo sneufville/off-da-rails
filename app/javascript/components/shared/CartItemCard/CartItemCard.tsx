@@ -19,6 +19,8 @@ import {
   BsPlusSquareFill,
 } from 'react-icons/bs';
 
+type QuantityAction = 'increment' | 'decrement';
+
 type CartItemCardProps = {
   item: CustomerOrderItem;
   itemCategory?: ItemCategory;
@@ -35,12 +37,28 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   const [showDeletePrompt, setShowDeletePrompt] =
     React.useState<boolean>(false);
   const [itemQuantity, setItemQuantity] = React.useState<number>(1);
+  const [quantityChanged, setQuantityChanged] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setItemQuantity(item.item_qty);
+    setQuantityChanged(false);
   }, [item.item_qty]);
 
-  // React.useEffect(() => {}, [itemQuantity])
+  const updateItemQuantity = React.useCallback(
+    (action: QuantityAction) => {
+      if (action === 'increment') {
+        setItemQuantity((prevState) => prevState + 1);
+      }
+
+      if (action === 'decrement') {
+        if (itemQuantity === 1) return;
+        setItemQuantity((prevState) => prevState - 1);
+      }
+
+      setQuantityChanged(true);
+    },
+    [itemQuantity]
+  );
 
   return (
     <div className="p-2 rounded bg-slate-50 flex items-center gap-2">
@@ -53,17 +71,43 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2">
-          <button className="p-2 rounded text-white bg-slate-700">
+          <button
+            className="p-2 rounded text-white bg-slate-700"
+            onClick={() => updateItemQuantity('increment')}
+          >
             <BsPlusLg size={24} />
           </button>
           <span>
             Quantity: <span className="font-bold">{itemQuantity}</span>
           </span>
-          <button className="p-2 rounded text-white bg-slate-700">
+          <button
+            className={[
+              'p-2 rounded text-white',
+              itemQuantity === 1
+                ? 'bg-slate-400 cursor-not-allowed'
+                : 'bg-slate-700',
+            ].join(' ')}
+            disabled={itemQuantity === 1}
+            onClick={() => updateItemQuantity('decrement')}
+          >
             <BsDashLg size={24} />
           </button>
-          <button className="bg-green-600 rounded text-white p-2">
+          <button
+            className={[
+              'rounded text-white p-2 flex items-center gap-x-2',
+              quantityChanged
+                ? 'bg-green-600'
+                : 'bg-green-300 cursor-not-allowed',
+            ].join(' ')}
+            disabled={!quantityChanged}
+            onClick={() =>
+              typeof setQuantityAction === 'function'
+                ? setQuantityAction(itemQuantity)
+                : {}
+            }
+          >
             <BsCheckCircleFill size={24} />
+            Update
           </button>
         </div>
         <button

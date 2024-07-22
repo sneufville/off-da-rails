@@ -19,12 +19,33 @@ const CustomerCart = (): React.ReactNode => {
   const _cart_items = cart_items as CustomerOrderItem[];
   const [reqInProgress, setReqInProgress] = React.useState<boolean>(false);
 
+  const execUpdateCartItem = React.useCallback(
+    (item: CustomerOrderItem, itemCount: number) => {
+      const _updateAction = async () => {
+        const token = ApiUtils.getCSRFToken();
+        if (!token) return;
+        const apiResponse = await ApiUtils.editCartItem({
+          itemCount,
+          itemId: item.id,
+          token,
+        });
+        if (apiResponse.success) {
+          router.reload({
+            only: ['cart', 'cart_items'],
+          });
+        }
+      };
+
+      setReqInProgress(true);
+      _updateAction().finally(() => setReqInProgress(false));
+    },
+    []
+  );
+
   const execDeleteFromCart = React.useCallback((item: CustomerOrderItem) => {
     console.log('try to delete item from cart');
     const _deleteAction = async () => {
-      const token = document
-        .querySelector('meta[name="csrf-token"]')!
-        .getAttribute('content');
+      const token = ApiUtils.getCSRFToken();
       if (!token) return;
       const apiResponse = await ApiUtils.removeItemFromCart({
         itemId: item.id,
@@ -55,6 +76,9 @@ const CustomerCart = (): React.ReactNode => {
               key={`cart-item-${item.id}`}
               item={item}
               deleteItemAction={(orderItem) => execDeleteFromCart(orderItem)}
+              setQuantityAction={(quantity) =>
+                execUpdateCartItem(item, quantity)
+              }
             />
           ))}
         </div>

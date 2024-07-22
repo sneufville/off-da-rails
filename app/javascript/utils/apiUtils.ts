@@ -17,13 +17,24 @@ type CartAPIRequestProps = {
   token: string;
 };
 
+type CartQuantityAPIRequestProps = CartAPIRequestProps & {
+  itemCount: number;
+};
+
 export default class ApiUtils {
+  static getCSRFToken(): string | null {
+    return document
+      .querySelector('meta[name="csrf-token"]')!
+      .getAttribute('content');
+  }
+
   static buildAPIRequestHeaders(token: string) {
     return {
       'content-type': 'application/json',
       'X-CSRF-TOKEN': token,
     };
   }
+
   static async fetchProvinces(): Promise<Province[]> {
     try {
       const url = '/api/provinces';
@@ -59,6 +70,28 @@ export default class ApiUtils {
         'Failed to add item to cart with error: ',
         (e as Error).message
       );
+      return {
+        success: false,
+        message: (e as Error).message,
+      };
+    }
+  }
+
+  static async editCartItem({
+    itemCount,
+    itemId,
+    token,
+  }: CartQuantityAPIRequestProps): Promise<APIResponse> {
+    const headers = this.buildAPIRequestHeaders(token);
+    try {
+      const url = `/api/customer_orders/cart/${itemId}/qty`;
+      const { data: responseData } = await axios.put(
+        url,
+        { customer_order_items: { item_id: itemId, item_qty: itemCount } },
+        { headers }
+      );
+      return responseData as APIResponse;
+    } catch (e) {
       return {
         success: false,
         message: (e as Error).message,

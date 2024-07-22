@@ -5,7 +5,11 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       # try to retrieve the cart
       cart = CustomerOrder.includes(:customer_order_items).find_by(:user_id => current_user.id, :order_state => 0)
-      cart_items = CustomerOrderItem.all.where(:customer_order_id => cart.id)
+      if cart
+        cart_items = CustomerOrderItem.all.where(:customer_order_id => cart.id)
+      else
+        cart_items = []
+      end
       puts "user signed in"
       {
         'current_user' => current_user,
