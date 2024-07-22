@@ -74,6 +74,6 @@ export type CustomerOrderItem = {
   item_cost: number;
   item_name: string;
   item_qty: number;
-  tax_amount: number;
+  tax_amt: number;
   item_total_cost: number;
 };

@@ -21,7 +21,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
   const _cart_items = cart_items as CustomerOrderItem[];
   console.log('from page wrapper -> current_user: ', current_user);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       <div
         className="bg-gray-50 p-4 w-full flex items-center justify-between"
         id="appMenu"

@@ -66,7 +66,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <div className="flex flex-col flex-1">
         <h2 className="text-lg font-bold text-slate-700">{item.item_name}</h2>
         <p>
-          Item Cost: ${(item.item_cost / 100).toFixed(2)} - {item.tax_amount}
+          Item Cost: ${(item.item_cost / 100).toFixed(2)} - {item.tax_amt}
         </p>
       </div>
       <div className="flex items-center gap-2">

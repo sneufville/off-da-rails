@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   # customer orders and cart
   # view routes
   get '/customer_orders/customer_cart', to: 'customer_orders#customer_cart'
+  get '/customer_orders/checkout', to: 'customer_orders#checkout_customer_cart'
   # api routes
   get '/api/customer_orders/cart', to: 'customer_orders#api_cart'
   post '/api/customer_orders/cart/:id', to: 'customer_orders#api_add_to_cart'

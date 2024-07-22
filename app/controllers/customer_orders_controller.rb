@@ -8,6 +8,11 @@ class CustomerOrdersController < ApplicationController
     render inertia: 'CustomerOrders/CustomerCart'
   end
 
+  def checkout_customer_cart
+
+    render inertia: 'CustomerOrders/CustomerCheckout'
+  end
+
   # -- API Routes --
   def api_cart
     cart = get_customer_cart
@@ -111,7 +116,16 @@ class CustomerOrdersController < ApplicationController
       }
     end
 
+    tax_entries = get_tax_entries
+    tax_percentage = 0
+    tax_entries.each do |entry|
+      tax_percentage += entry.tax_amt
+    end
+    item_tax_amount = related_cart_item.item.item_cost * (tax_percentage * 100)
     related_cart_item.item_qty = _params['item_qty']
+    related_cart_item.item_cost = related_cart_item.item.item_cost
+    related_cart_item.tax_amt = item_tax_amount
+    related_cart_item.item_total_cost = (related_cart_item.item_cost + item_tax_amount) * _params['item_qty']
     related_cart_item.save
 
     render json: {
