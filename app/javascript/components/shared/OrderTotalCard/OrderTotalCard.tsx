@@ -5,13 +5,14 @@
  */
 
 import React from 'react';
-import type { Cart } from '../../../@types/offDaRails';
+import type { Cart, ProvinceTaxEntry } from '../../../@types/offDaRails';
 import { BiLogoStripe } from 'react-icons/bi';
 
 type OrderTotalCardProps = {
   cart: Cart;
   checkoutAction?: () => void;
   reqInProgress?: boolean;
+  provinceTaxEntries: Array<ProvinceTaxEntry>;
 };
 
 const OrderTotalCard: React.FC<OrderTotalCardProps> = ({

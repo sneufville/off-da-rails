@@ -11,16 +11,19 @@ import {
   Cart,
   CustomerOrderItem,
   CustomerProfile,
+  User,
 } from '../../@types/offDaRails';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
 import SimpleCheckoutItem from '../../components/shared/SimpleCheckoutItem/SimpleCheckoutItem';
 import OrderTotalCard from '../../components/shared/OrderTotalCard/OrderTotalCard';
+import CheckoutProfileCard from '../../components/shared/CheckoutProfileCard/CheckoutProfileCard';
 
 const CustomerCheckout = (): React.ReactNode => {
   const { cart, cart_items, current_user, user_profile } = usePage().props;
   const _cart = cart as Cart;
   const _cartItems = cart_items as CustomerOrderItem[];
   const _profile = user_profile as CustomerProfile;
+  const _user = current_user as User;
 
   return (
     <PageWrapper>
@@ -38,7 +41,8 @@ const CustomerCheckout = (): React.ReactNode => {
                 />
               ))}
             </div>
-            <OrderTotalCard cart={_cart} />
+            <CheckoutProfileCard profile={_profile} user={_user} />
+            <OrderTotalCard cart={_cart} provinceTaxEntries={[]} />
           </div>
         ) : (
           <InfoCard cardType={'info'} title={'Empty Cart'} />

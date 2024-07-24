@@ -45,7 +45,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
         {children}
       </div>
       <div className="bg-gray-50 p-4 w-full" id="appFooter">
-        <span>Footer Placeholder</span>
+        <span>Extra Info Container / Notifications</span>
       </div>
     </div>
   );

@@ -10,10 +10,12 @@ class ApplicationController < ActionController::Base
       else
         cart_items = []
       end
+      # try to get the user profile
+      user_profile = CustomerProfile.find_by(:user_id => current_user.id)
       puts "user signed in"
       {
         'current_user' => current_user,
-        'user_profile' => nil,
+        'user_profile' => user_profile ? user_profile : nil,
         'cart' => cart,
         'cart_items' => cart_items
       }

@@ -50,6 +50,13 @@ export type Province = {
   abbreviation: string;
 };
 
+export type ProvinceTaxEntry = {
+  id: number;
+  province_id: number;
+  tax_label: string;
+  tax_amt: number;
+};
+
 export type APIResponse = {
   success: boolean;
   message: string;
