@@ -54,10 +54,10 @@ const CartButton: React.FC<CartButtonProps> = ({ cartItems }) => {
           <MenuSeparator className="my-1 h-px bg-white/6" />
           <MenuItem>
             <Link
-              className="p-2 bg-indigo-600 rounded text-white flex items-center"
-              href="/customer_orders/checkout"
+              className="p-2 bg-indigo-600 rounded text-white flex items-center justify-between"
+              href="/customer_orders/customer_cart"
             >
-              Checkout
+              Cart
               <BiSolidArrowToRight />
             </Link>
           </MenuItem>

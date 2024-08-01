@@ -1,5 +1,5 @@
 class CustomerProfilesController < ApplicationController
-  before_action :authenticate_user!, :get_profile, only: [:index, :create_or_update_profile]
+  before_action :authenticate_user!, :get_profile, only: [:index, :create_or_update_profile, :api_update_profile]
   protect_from_forgery
 
   # get the current profile, i.e profile for the logged in user
@@ -56,8 +56,30 @@ class CustomerProfilesController < ApplicationController
           }, status: :unprocessable_content
         end
       end
+    end
+  end
 
-
+  def api_update_profile
+    _params = profile_params
+    begin
+      if @current_profile
+        if @current_profile.update(_params)
+          return render json: {
+            success: true,
+            message: 'Profile updated'
+          }, status: :accepted
+        else
+          return render json: {
+            success: false,
+            message: 'Profile not updated'
+          }, status: :bad_request
+        end
+      else
+        return render json: {
+          success: false,
+          message: 'Profile not set up'
+        }
+      end
     end
   end
 

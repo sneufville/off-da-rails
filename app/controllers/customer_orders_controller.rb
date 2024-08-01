@@ -9,8 +9,10 @@ class CustomerOrdersController < ApplicationController
   end
 
   def checkout_customer_cart
-
-    render inertia: 'CustomerOrders/CustomerCheckout'
+    provinces = Province.all
+    render inertia: 'CustomerOrders/CustomerCheckout', props: {
+      provinces: provinces
+    }
   end
 
   # -- API Routes --

@@ -4,7 +4,11 @@
  * project  off_da_rails_coffee
  */
 import axios from 'axios';
-import { APIResponse, Province } from '../@types/offDaRails';
+import type {
+  APIResponse,
+  CustomerProfile,
+  Province,
+} from '../@types/offDaRails';
 
 type AddItemProps = {
   itemId: number;
@@ -111,7 +115,39 @@ export default class ApiUtils {
     } catch (e) {
       return {
         success: false,
-        message: (e as Error).message,
+        message: 'Failed to remove item from cart',
+      };
+    }
+  }
+
+  static async updateProfile(
+    token: string,
+    profileData: CustomerProfile
+  ): Promise<APIResponse> {
+    const headers = this.buildAPIRequestHeaders(token);
+
+    try {
+      const url = `/api/customer_profiles/me`;
+
+      const payload: Record<string, any> = { ...profileData };
+      delete payload['created_at'];
+      delete payload['updated_at'];
+      delete payload['user_id'];
+      delete payload['id'];
+
+      const { data: responseData } = await axios.put(
+        url,
+        {
+          customer_profile: { ...payload },
+        },
+        { headers }
+      );
+
+      return responseData as APIResponse;
+    } catch (e) {
+      return {
+        success: false,
+        message: 'Failed to update profile',
       };
     }
   }
