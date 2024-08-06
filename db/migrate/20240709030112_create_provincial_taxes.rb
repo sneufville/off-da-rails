@@ -1,9 +1,9 @@
 class CreateProvincialTaxes < ActiveRecord::Migration[7.1]
   def change
     create_table :provincial_taxes do |t|
-      t.integer :province_id
       t.string :tax_label
-      t.integer :tax_amt
+      t.decimal :tax_amt
+      t.references :province, null: false, foreign_key: true
 
       t.timestamps
     end

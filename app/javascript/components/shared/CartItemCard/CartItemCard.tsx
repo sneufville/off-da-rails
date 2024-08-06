@@ -18,6 +18,7 @@ import {
   BsPlusLg,
   BsPlusSquareFill,
 } from 'react-icons/bs';
+import TaxLabel from '../TaxLabel/TaxLabel';
 
 type QuantityAction = 'increment' | 'decrement';
 
@@ -65,11 +66,22 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <span className="font-bold">{item.item_qty} x</span>
       <div className="flex flex-col flex-1">
         <h2 className="text-lg font-bold text-slate-700">{item.item_name}</h2>
-        <p>
-          Item Cost: ${(item.item_cost / 100).toFixed(2)} - {item.tax_amt}
-        </p>
+        <div>
+          <span className="text-lg">Item Cost: ${item.item_cost}</span>
+          <div className="flex items-center gap-1 flex-wrap">
+            {item.gst_amt > 0 ? (
+              <TaxLabel taxLabel={'GST'} taxAmount={item.gst_amt} />
+            ) : null}
+            {item.hst_amt > 0 ? (
+              <TaxLabel taxLabel={'HST'} taxAmount={item.hst_amt} />
+            ) : null}
+            {item.pst_amt > 0 ? (
+              <TaxLabel taxLabel={'PST'} taxAmount={item.pst_amt} />
+            ) : null}
+          </div>
+        </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <button
             className="p-2 rounded text-white bg-slate-700"

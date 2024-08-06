@@ -16,14 +16,9 @@ import {
   BiQuestionMark,
   BiSolidCheckCircle,
 } from 'react-icons/bi';
+import type { CommonDialogProps } from '../../../@types/offDaRails';
 
-type QuestionDialogProps = {
-  dialogCancelAction: () => void;
-  dialogConfirmAction: () => void;
-  dialogContent: string;
-  dialogOpen: boolean;
-  dialogTitle: string;
-};
+type QuestionDialogProps = CommonDialogProps;
 
 const QuestionDialog: React.FC<QuestionDialogProps> = ({
   dialogCancelAction,

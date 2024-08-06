@@ -20,6 +20,7 @@ import ItemCard from '../../components/shared/ItemCard/ItemCard';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import Paginator from '../../components/shared/Paginator/Paginator';
 import ApiUtils from '../../utils/apiUtils';
+import ProfileFormModal from '../../components/shared/ProfileFormModal/ProfileFormModal';
 
 type ItemListingProps = {
   current_page?: string;
@@ -44,6 +45,8 @@ const ItemIndex: React.FC<ItemListingProps> = ({
   const [categoryQuery, setCategoryQuery] = React.useState<string>('');
   const [selectedCategory, setSelectedCategory] =
     React.useState<ItemCategory | null>(null);
+  const [showProfileModal, setShowProfileModal] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (item_name_filter) setItemNameFilter(item_name_filter);
@@ -106,11 +109,17 @@ const ItemIndex: React.FC<ItemListingProps> = ({
           itemCount: count ? count : 1,
           _token: token,
         });
+        console.log('response: ', response);
         if (response.success) {
           // partial reload
           router.reload({
             only: ['cart', 'cart_items'],
           });
+        } else {
+          if (response.code === 'ERR_NO_PROFILE') {
+            console.log('show no profile, quick modal');
+            setShowProfileModal(true);
+          }
         }
       };
 
@@ -228,6 +237,15 @@ const ItemIndex: React.FC<ItemListingProps> = ({
           totalCount={item_count}
         />
       </div>
+      <ProfileFormModal
+        dialogCancelAction={() => setShowProfileModal(false)}
+        dialogConfirmAction={() => setShowProfileModal(false)}
+        dialogContent={
+          'Please update your profile so that the appropriate tax information can be displayed'
+        }
+        dialogOpen={showProfileModal}
+        dialogTitle={'Update Profile'}
+      />
     </PageWrapper>
   );
 };

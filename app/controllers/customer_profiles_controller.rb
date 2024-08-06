@@ -75,6 +75,20 @@ class CustomerProfilesController < ApplicationController
           }, status: :bad_request
         end
       else
+        # create the profile
+        profile = CustomerProfile.new(_params)
+        profile.user_id = current_user.id
+        if profile.save
+          return render json: {
+            success: true,
+            message: 'Profile updated',
+            code: 'SUCCESS_PROFILE_UPDATED'
+          }
+        else
+          profile.errors.each do |err|
+            puts "profile api update error: #{err.inspect}"
+          end
+        end
         return render json: {
           success: false,
           message: 'Profile not set up'

@@ -29,13 +29,11 @@ const SimpleCheckoutItem: React.FC<SimpleCheckoutItemProps> = ({
       </div>
       <div className="flex flex-col items-end text-right">
         <span className="text-right text-lg font-bold">
-          Item Total Cost: ${(item.item_total_cost / 100).toFixed(2)}
+          Item Total Cost: ${item.item_total_cost.toFixed(2)}
         </span>
         <span className="text-slate-600">
-          <span className="font-medium">
-            Item Cost: ${(item.item_cost / 100).toFixed(2)}
-          </span>{' '}
-          + <span>Tax: ${(item.tax_amt / 100).toFixed(2)}</span>
+          <span className="font-medium">Item Cost: ${item.item_cost}</span> +{' '}
+          <span>Tax: ${item.tax_amt}</span>
         </span>
       </div>
     </div>

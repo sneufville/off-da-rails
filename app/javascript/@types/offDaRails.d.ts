@@ -60,6 +60,7 @@ export type ProvinceTaxEntry = {
 export type APIResponse = {
   success: boolean;
   message: string;
+  code?: string;
   data?: Array<Object> | Object | undefined;
   errors?: Array<{
     message: string;
@@ -83,4 +84,15 @@ export type CustomerOrderItem = {
   item_qty: number;
   tax_amt: number;
   item_total_cost: number;
+  gst_amt: number;
+  hst_amt: number;
+  pst_amt: number;
+};
+
+export type CommonDialogProps = {
+  dialogCancelAction: () => void;
+  dialogConfirmAction: () => void;
+  dialogContent: string;
+  dialogOpen: boolean;
+  dialogTitle: string;
 };

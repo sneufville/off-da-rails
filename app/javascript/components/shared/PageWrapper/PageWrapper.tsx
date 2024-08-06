@@ -6,6 +6,8 @@
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { BiSolidShoppingBag } from 'react-icons/bi';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import UserAccountButton from '../UserAccountButton/UserAccountButton';
 import { Cart, CustomerOrderItem, User } from '../../../@types/offDaRails';
 import CartButton from '../CartButton/CartButton';
@@ -47,6 +49,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
       <div className="bg-gray-50 p-4 w-full" id="appFooter">
         <span>Extra Info Container / Notifications</span>
       </div>
+      <ToastContainer />
     </div>
   );
 };

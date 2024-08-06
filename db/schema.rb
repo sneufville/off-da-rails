@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_05_194249) do
   create_table "about_pages", force: :cascade do |t|
     t.string "page_title"
     t.text "content"
@@ -54,30 +54,39 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
   end
 
   create_table "customer_order_items", force: :cascade do |t|
-    t.integer "item_id"
-    t.integer "customer_order_id"
-    t.integer "item_cost"
+    t.integer "item_id", null: false
+    t.integer "customer_order_id", null: false
+    t.decimal "item_cost"
     t.string "item_name"
     t.integer "item_qty"
-    t.integer "tax_amt"
-    t.integer "item_total_cost"
+    t.decimal "item_total_cost"
+    t.decimal "hst_amt", default: "0.0"
+    t.decimal "gst_amt", default: "0.0"
+    t.decimal "pst_amt", default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["customer_order_id"], name: "index_customer_order_items_on_customer_order_id"
+    t.index ["item_id"], name: "index_customer_order_items_on_item_id"
   end
 
   create_table "customer_orders", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "order_total", default: 0
+    t.integer "user_id", null: false
+    t.decimal "order_total", default: "0.0"
     t.integer "order_item_count", default: 0
     t.string "transaction_id"
     t.integer "order_state"
     t.boolean "order_complete"
+    t.decimal "total_gst", default: "0.0"
+    t.decimal "total_pst", default: "0.0"
+    t.decimal "total_hst", default: "0.0"
+    t.string "customer_order_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_customer_orders_on_user_id"
   end
 
   create_table "customer_profiles", force: :cascade do |t|
-    t.integer "user_id"
+    t.integer "user_id", null: false
     t.string "first_name"
     t.string "last_name"
     t.string "phone_number"
@@ -88,6 +97,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
     t.string "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_customer_profiles_on_user_id"
   end
 
   create_table "item_categories", force: :cascade do |t|
@@ -101,11 +111,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
   create_table "items", force: :cascade do |t|
     t.string "item_name"
     t.string "item_description"
-    t.integer "item_category_id"
-    t.integer "item_cost"
+    t.integer "item_category_id", null: false
+    t.decimal "item_cost"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "is_available"
+    t.boolean "is_available", default: true
+    t.index ["item_category_id"], name: "index_items_on_item_category_id"
   end
 
   create_table "provinces", force: :cascade do |t|
@@ -116,11 +127,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
   end
 
   create_table "provincial_taxes", force: :cascade do |t|
-    t.integer "province_id"
     t.string "tax_label"
-    t.integer "tax_amt"
+    t.decimal "tax_amt"
+    t.integer "province_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["province_id"], name: "index_provincial_taxes_on_province_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -136,4 +148,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_223333) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "customer_order_items", "customer_orders"
+  add_foreign_key "customer_order_items", "items"
+  add_foreign_key "customer_orders", "users"
+  add_foreign_key "customer_profiles", "users"
+  add_foreign_key "items", "item_categories"
+  add_foreign_key "provincial_taxes", "provinces"
 end

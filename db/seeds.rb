@@ -91,27 +91,27 @@ PROVINCE_DATA.each do |key, province_obj|
   tax_obj = tax_rate_data[key]
   if tax_obj
     # check for gst
-    if tax_obj['gst'] > 0
+    if tax_obj['gst'] >= 0
       ProvincialTax.create!(
         province_id: prov.id,
         tax_label: 'gst',
-        tax_amt: (tax_obj['gst'].to_f * 100).to_i
+        tax_amt: tax_obj['gst']
       )
     end
     # check for hst
-    if tax_obj['hst'] > 0
+    if tax_obj['hst'] >= 0
       ProvincialTax.create!(
         province_id: prov.id,
         tax_label: 'hst',
-        tax_amt: (tax_obj['hst'].to_f * 100).to_i
+        tax_amt: tax_obj['hst']
       )
     end
     # check for pst
-    if tax_obj['pst'] > 0
+    if tax_obj['pst'] >= 0
       ProvincialTax.create!(
         province_id: prov.id,
         tax_label: 'pst',
-        tax_amt: (tax_obj['pst'].to_f * 100).to_i
+        tax_amt: tax_obj['pst']
       )
     end
   end
@@ -122,7 +122,7 @@ fake_coffee_data.each do |coffee_obj|
   item = Item.new(
     item_name: coffee_obj['name'],
     item_description: coffee_obj['description'],
-    item_cost: coffee_obj['price'] * 100,
+    item_cost: coffee_obj['price'],
     )
 
   related_category = ItemCategory.find_or_create_by(category_name: coffee_obj['flavor_profile'][0])
@@ -149,7 +149,7 @@ category_number = 1
     item = Item.new(
       item_name: Faker::Commerce.product_name,
       item_description: Faker::Lorem.paragraph,
-      item_cost: Faker::Commerce.price(range: 1..50) * 100,
+      item_cost: Faker::Commerce.price(range: 1..50),
     )
     item.item_category = item_category
     item.save!

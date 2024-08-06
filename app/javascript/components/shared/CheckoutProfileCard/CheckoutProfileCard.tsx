@@ -193,7 +193,7 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
             <div>
               <AppButton
                 disabled={isUpdatingProfile}
-                iconElement={<BiSolidSave className="text-white" />}
+                iconelement={<BiSolidSave className="text-white" />}
                 onClick={() => {
                   if (
                     typeof profileData.province_id === 'undefined' ||

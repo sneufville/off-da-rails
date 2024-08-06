@@ -3,7 +3,7 @@
  * created  2024-07-15
  * project  off_da_rails_coffee
  */
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type {
   APIResponse,
   CustomerProfile,
@@ -70,14 +70,14 @@ export default class ApiUtils {
       );
       return responseData as APIResponse;
     } catch (e) {
-      console.error(
-        'Failed to add item to cart with error: ',
-        (e as Error).message
-      );
-      return {
-        success: false,
-        message: (e as Error).message,
-      };
+      const axiosError = e as AxiosError;
+      const { response: errorResponse } = axiosError;
+      return errorResponse
+        ? (errorResponse.data as APIResponse)
+        : {
+            success: false,
+            message: (e as Error).message,
+          };
     }
   }
 

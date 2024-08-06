@@ -7,7 +7,7 @@ import React from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 
 type AppButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  iconElement?: React.ReactNode;
+  iconelement?: React.ReactNode;
 };
 
 const AppButton: React.FC<AppButtonProps> = (props) => {
@@ -17,7 +17,7 @@ const AppButton: React.FC<AppButtonProps> = (props) => {
       {...props}
     >
       {props.children}
-      {props.iconElement}
+      {props.iconelement}
     </button>
   );
 };

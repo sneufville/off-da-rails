@@ -96,7 +96,7 @@ const CustomerCart = (): React.ReactNode => {
         )}
         <div>
           <AppButton
-            iconElement={<BiSolidArrowToRight className="text-white" />}
+            iconelement={<BiSolidArrowToRight className="text-white" />}
             onClick={() => onNavToCheckout()}
           >
             Proceed to checkout

@@ -39,29 +39,45 @@ class CustomerOrdersController < ApplicationController
     end
 
     # retrieve tax entries
-    tax_total = 0
+    tax_total = 0.00
     tax_entries = get_tax_entries
 
     puts tax_entries.inspect
     # if no tax entries, return an error to tell the user to create a profile
-    unless tax_entries || tax_entries.length < 1
+    if tax_entries.length < 1
       return render json: {
         success: false,
-        error: 'Profile not setup yet.'
+        error: 'Profile not setup yet.',
+        code: 'ERR_NO_PROFILE'
       }, status: :bad_request
     end
 
+    hst_tax = 0.0
+    gst_tax = 0.0
+    pst_tax = 0.0
     tax_entries.each do |entry|
       tax_total += entry.tax_amt
+      if entry.tax_label == 'gst'
+        gst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'hst'
+        hst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'pst'
+        pst_tax = entry.tax_amt
+      end
     end
-    tax_amount = related_item.item_cost * tax_total / 100
+    hst_amount = related_item.item_cost * hst_tax
+    gst_amount = related_item.item_cost * gst_tax
+    pst_amount = related_item.item_cost * pst_tax
+    total_tax_amount = hst_amount + gst_amount + pst_amount
 
     # check if the item is already in the cart (customer_order_items table)
     order_item = CustomerOrderItem.find_by(:customer_order_id => cart.id, :item_id => related_item.id)
 
     if order_item
       order_item.item_qty += 1
-      cart.order_total += (related_item.item_cost + tax_amount)
+      cart.order_total += (related_item.item_cost + total_tax_amount)
     else
       order_item = CustomerOrderItem.new(
         :customer_order_id => cart.id,
@@ -69,10 +85,12 @@ class CustomerOrdersController < ApplicationController
         :item_name => related_item.item_name,
         :item_qty => 1,
         :item_cost => related_item.item_cost,
-        :tax_amt => tax_amount,
-        :item_total_cost => related_item.item_cost + tax_amount
+        :hst_amt => hst_amount,
+        :gst_amt => gst_amount,
+        :pst_amt => pst_amount,
+        :item_total_cost => related_item.item_cost + total_tax_amount,
       )
-      cart.order_total += (related_item.item_cost + tax_amount) * 100
+      cart.order_total += (related_item.item_cost + total_tax_amount)
     end
 
     cart.order_item_count += 1
@@ -119,15 +137,41 @@ class CustomerOrdersController < ApplicationController
     end
 
     tax_entries = get_tax_entries
-    tax_percentage = 0
-    tax_entries.each do |entry|
-      tax_percentage += entry.tax_amt
+
+    if tax_entries.length < 1
+      return render json: {
+        success: false,
+        error: 'Profile not setup yet.',
+        code: 'ERR_NO_PROFILE'
+      }, status: :bad_request
     end
-    item_tax_amount = related_cart_item.item.item_cost * (tax_percentage * 100)
+
+    gst_tax = BigDecimal(0.00)
+    hst_tax = BigDecimal(0.00)
+    pst_tax = BigDecimal(0.00)
+    tax_entries.each do |entry|
+      if entry.tax_label == 'gst'
+        gst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'hst'
+        hst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'pst'
+        pst_tax = entry.tax_amt
+      end
+    end
+
+    gst_amount = related_cart_item.item.item_cost * gst_tax * _params['item_qty']
+    hst_amount = related_cart_item.item.item_cost * hst_tax * _params['item_qty']
+    pst_amount = related_cart_item.item.item_cost * pst_tax * _params['item_qty']
+
+    item_tax_amount = gst_amount + hst_amount + pst_amount
     related_cart_item.item_qty = _params['item_qty']
     related_cart_item.item_cost = related_cart_item.item.item_cost
-    related_cart_item.tax_amt = item_tax_amount
-    related_cart_item.item_total_cost = (related_cart_item.item_cost + item_tax_amount) * _params['item_qty']
+    related_cart_item.gst_amt = gst_amount
+    related_cart_item.hst_amt = hst_amount
+    related_cart_item.pst_amt = pst_amount
+    related_cart_item.item_total_cost = (related_cart_item.item_cost * _params['item_qty']) + item_tax_amount
     related_cart_item.save
 
     render json: {
@@ -189,6 +233,24 @@ class CustomerOrdersController < ApplicationController
   def recalculate_cart_total
     cart = get_customer_cart
     cart_items = get_customer_cart_items
+    tax_entries = get_tax_entries
+
+    gst_tax = 0.00
+    hst_tax = 0.00
+    pst_tax = 0.00
+    tax_entries.each do |entry|
+      if entry.tax_label == 'gst'
+        gst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'hst'
+        hst_tax = entry.tax_amt
+      end
+      if entry.tax_label == 'pst'
+        pst_tax = entry.tax_amt
+      end
+    end
+
+    # update customer order - recalculate
 
     cart_total = 0
     item_count = 0

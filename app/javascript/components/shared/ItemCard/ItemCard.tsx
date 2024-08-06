@@ -32,7 +32,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
           </Link>
         </h2>
         <p className="text-lg">{item.item_description}</p>
-        <p className="font-bold">${(item.item_cost / 100).toFixed(2)}</p>
+        <p className="font-bold">${item.item_cost}</p>
         {itemCategory ? (
           <Tag tagText={itemCategory.category_name} />
         ) : undefined}
