@@ -16,7 +16,7 @@ const TaxLabel: React.FC<TaxLabelProps> = ({ taxLabel, taxAmount }) => {
       <span className="p-1 font-bold bg-slate-700 text-white rounded">
         {taxLabel}
       </span>
-      <span>${taxAmount}</span>
+      <span>${Number(taxAmount).toFixed(2)}</span>
     </div>
   );
 };

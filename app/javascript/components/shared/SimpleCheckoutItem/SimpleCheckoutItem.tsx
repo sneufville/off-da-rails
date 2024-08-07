@@ -9,6 +9,7 @@ import type {
   CustomerOrderItem,
   ItemCategory,
 } from '../../../@types/offDaRails';
+import TaxLabel from '../TaxLabel/TaxLabel';
 
 type SimpleCheckoutItemProps = {
   item: CustomerOrderItem;
@@ -29,12 +30,22 @@ const SimpleCheckoutItem: React.FC<SimpleCheckoutItemProps> = ({
       </div>
       <div className="flex flex-col items-end text-right">
         <span className="text-right text-lg font-bold">
-          Item Total Cost: ${item.item_total_cost.toFixed(2)}
+          Item Total Cost: ${Number(item.item_total_cost).toFixed(2)}
         </span>
-        <span className="text-slate-600">
-          <span className="font-medium">Item Cost: ${item.item_cost}</span> +{' '}
-          <span>Tax: ${item.tax_amt}</span>
-        </span>
+        <div className="text-slate-600 flex flex-col gap-1">
+          <span className="font-medium">Item Cost: ${item.item_cost}</span>
+          <div className="flex items-center gap-1">
+            {item.gst_amt > 0 ? (
+              <TaxLabel taxLabel={'GST'} taxAmount={item.gst_amt} />
+            ) : null}
+            {item.hst_amt > 0 ? (
+              <TaxLabel taxLabel={'HST'} taxAmount={item.hst_amt} />
+            ) : null}
+            {item.pst_amt > 0 ? (
+              <TaxLabel taxLabel={'PST'} taxAmount={item.pst_amt} />
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );

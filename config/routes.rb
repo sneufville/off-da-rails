@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get '/customer_orders/customer_cart', to: 'customer_orders#customer_cart'
   get '/customer_orders/checkout', to: 'customer_orders#checkout_customer_cart'
   # api routes
+  post '/api/customer_orders/place_order', to: 'customer_orders#api_place_customer_order'
   get '/api/customer_orders/cart', to: 'customer_orders#api_cart'
   post '/api/customer_orders/cart/:id', to: 'customer_orders#api_add_to_cart'
   put '/api/customer_orders/cart/:id/qty', to: 'customer_orders#api_update_cart_item_qty'

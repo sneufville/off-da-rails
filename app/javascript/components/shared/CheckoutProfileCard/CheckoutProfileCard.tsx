@@ -19,6 +19,7 @@ import {
 import { BiChevronDown, BiSolidSave } from 'react-icons/bi';
 import ApiUtils from '../../../utils/apiUtils';
 import AppButton from '../AppButton/AppButton';
+import QuestionDialog from '../QuestionDialog/QuestionDialog';
 
 type CheckoutProfileCardProps = {
   user: User;
@@ -33,6 +34,8 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
   updateProfileAction,
   isUpdatingProfile,
 }) => {
+  const [provinceInitialLoad, setProvinceInitialLoad] =
+    React.useState<number>(0);
   const [provinces, setProvinces] = React.useState<Province[]>([]);
   const [profileData, setProfileData] = React.useState<CustomerProfile>({
     city: '',
@@ -46,16 +49,26 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
     street_address_2: '',
     updated_at: '',
   });
+  const [showProvinceUpdateNotice, setShowProvinceUpdateNotice] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (profile) {
       setProfileData(profile);
+      setProvinceInitialLoad(1);
     }
   }, [profile]);
 
   React.useEffect(() => {
     ApiUtils.fetchProvinces().then((results) => setProvinces(results));
   }, []);
+
+  React.useEffect(() => {
+    if (profileData.province_id !== 0 && provinceInitialLoad > 1) {
+      console.log('province changed');
+      setShowProvinceUpdateNotice(true);
+    }
+  }, [profileData.province_id, provinceInitialLoad]);
 
   return (
     <div>
@@ -80,7 +93,7 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
           className="origin-top transition duration-200 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0"
         >
           <div className="flex flex-col gap-4">
-            <h3>Basic Information</h3>
+            <h3 className="text-lg font-bold">Basic Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2">
               <div>
                 <p>
@@ -94,7 +107,7 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
               </div>
             </div>
             <hr />
-            <h3>Billing & Shipping Address</h3>
+            <h3 className="text-lg font-bold">Billing & Shipping Address</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="w-full flex flex-col gap-1">
                 <input
@@ -154,12 +167,13 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
                   name="province_id"
                   id="provinceId"
                   value={profileData.province_id}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setProfileData((prevState) => ({
                       ...prevState,
                       province_id: parseInt(e.target.value),
-                    }))
-                  }
+                    }));
+                    setProvinceInitialLoad((prevState) => prevState + 1);
+                  }}
                 >
                   <option>--</option>
                   {provinces.map((province) => (
@@ -209,6 +223,21 @@ const CheckoutProfileCard: React.FC<CheckoutProfileCardProps> = ({
           </div>
         </DisclosurePanel>
       </Disclosure>
+      <QuestionDialog
+        dialogCancelAction={() => {
+          setShowProvinceUpdateNotice(false);
+          setProvinceInitialLoad(1);
+          if (profile)
+            setProfileData((prevState) => ({
+              ...prevState,
+              province_id: profile.province_id,
+            }));
+        }}
+        dialogConfirmAction={() => {}}
+        dialogContent={`You are about to change your province, doing so may result in different taxes being applied, would you like to continue?`}
+        dialogOpen={showProvinceUpdateNotice}
+        dialogTitle={'Update Profile Province'}
+      />
     </div>
   );
 };

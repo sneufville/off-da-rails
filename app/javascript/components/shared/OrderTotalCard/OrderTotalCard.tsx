@@ -33,15 +33,19 @@ const OrderTotalCard: React.FC<OrderTotalCardProps> = ({
         <span>
           Order Total:{' '}
           <span className="text-green-800 font-bold">
-            ${(cart.order_total / 100).toFixed(2)}
+            ${Number(cart.order_total).toFixed(2)}
           </span>
         </span>
       </div>
       <div className="flex flex-1">
-        <button className="bg-green-600 hover:bg-green-500 duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-center">
+        <button
+          className="bg-green-600 hover:bg-green-500 duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-center"
+          disabled={reqInProgress}
+          onClick={checkoutAction}
+        >
           <span className="flex items-center">
             <BiLogoStripe size={32} />
-            Checkout with Stripe ${(cart.order_total / 100).toFixed(2)}
+            Checkout with Stripe ${Number(cart.order_total).toFixed(2)}
           </span>
         </button>
       </div>

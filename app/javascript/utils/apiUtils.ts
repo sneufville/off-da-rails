@@ -120,6 +120,21 @@ export default class ApiUtils {
     }
   }
 
+  static async placeOrder(token: string): Promise<APIResponse> {
+    const headers = this.buildAPIRequestHeaders(token);
+    try {
+      const url = '/api/customer_orders/place_order';
+      const { data: responseData } = await axios.post(url, {}, { headers });
+      console.log('order placed data: ', responseData);
+      return responseData as APIResponse;
+    } catch (e) {
+      return {
+        success: false,
+        message: 'Failed to perform transaction',
+      };
+    }
+  }
+
   static async updateProfile(
     token: string,
     profileData: CustomerProfile

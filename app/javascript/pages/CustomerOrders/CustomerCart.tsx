@@ -14,6 +14,7 @@ import ApiUtils from '../../utils/apiUtils';
 import AppLoader from '../../components/shared/AppLoader/AppLoader';
 import AppButton from '../../components/shared/AppButton/AppButton';
 import { BiSolidArrowToRight } from 'react-icons/bi';
+import CustomerSummaryCard from '../../components/shared/CartSummaryCard/CartSummaryCard';
 
 const CustomerCart = (): React.ReactNode => {
   const { cart, cart_items } = usePage().props;
@@ -76,8 +77,9 @@ const CustomerCart = (): React.ReactNode => {
     <PageWrapper>
       <div className="flex flex-col gap-y-4">
         <h1 className="text-4xl">Customer Cart</h1>
-        <p>Here's what you have in your cart so far...</p>
+        <CustomerSummaryCard cart={_cart} />
         <hr />
+        <p>Here's what you have in your cart so far...</p>
         {_cart_items.length ? (
           <div className="grid grid-cols-1 gap-2">
             {_cart_items.map((item) => (

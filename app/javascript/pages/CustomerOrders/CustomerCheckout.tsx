@@ -18,6 +18,8 @@ import SimpleCheckoutItem from '../../components/shared/SimpleCheckoutItem/Simpl
 import OrderTotalCard from '../../components/shared/OrderTotalCard/OrderTotalCard';
 import CheckoutProfileCard from '../../components/shared/CheckoutProfileCard/CheckoutProfileCard';
 import ApiUtils from '../../utils/apiUtils';
+import { toast } from 'react-toastify';
+import AppLoader from '../../components/shared/AppLoader/AppLoader';
 
 const CustomerCheckout = (): React.ReactNode => {
   const { cart, cart_items, current_user, user_profile } = usePage().props;
@@ -27,6 +29,7 @@ const CustomerCheckout = (): React.ReactNode => {
   const _user = current_user as User;
 
   const [updatingProfile, setUpdatingProfile] = React.useState<boolean>(false);
+  const [placingOrder, setPlacingOrder] = React.useState<boolean>(false);
   const updateProfile = React.useCallback(
     (profile: CustomerProfile) => {
       if (updatingProfile) return;
@@ -48,6 +51,25 @@ const CustomerCheckout = (): React.ReactNode => {
     },
     [updatingProfile]
   );
+
+  const checkoutAction = React.useCallback(() => {
+    if (placingOrder) return;
+    const token = ApiUtils.getCSRFToken();
+    if (!token) return;
+    setPlacingOrder(true);
+    ApiUtils.placeOrder(token)
+      .then((result) => {
+        if (result.success) {
+          toast.success('Order placed successfully');
+          router.reload({
+            only: ['cart', 'customer_cart'],
+          });
+        } else {
+          toast.error(result.errors?.join(' '));
+        }
+      })
+      .finally(() => setPlacingOrder(false));
+  }, [placingOrder]);
 
   return (
     <PageWrapper>
@@ -71,12 +93,17 @@ const CustomerCheckout = (): React.ReactNode => {
               updateProfileAction={(profileData) => updateProfile(profileData)}
               user={_user}
             />
-            <OrderTotalCard cart={_cart} provinceTaxEntries={[]} />
+            <OrderTotalCard
+              cart={_cart}
+              checkoutAction={() => checkoutAction()}
+              provinceTaxEntries={[]}
+            />
           </div>
         ) : (
           <InfoCard cardType={'info'} title={'Empty Cart'} />
         )}
       </div>
+      <AppLoader open={placingOrder} loaderContent={'Placing your order...'} />
     </PageWrapper>
   );
 };

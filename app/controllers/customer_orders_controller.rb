@@ -1,6 +1,6 @@
 class CustomerOrdersController < ApplicationController
-  before_action :authenticate_user!, :get_customer_cart, :get_customer_cart_items
-  after_action :refresh_cart
+  before_action :authenticate_user!, :get_customer_cart, :get_customer_cart_items, :get_profile
+  after_action :refresh_cart, :recalculate_cart_total
 
   # -- Normal Views --
   def customer_cart
@@ -210,6 +210,48 @@ class CustomerOrdersController < ApplicationController
     }
   end
 
+  def api_place_customer_order
+
+    refresh_cart
+    # cart = get_customer_cart
+    begin
+      # place order
+      if @customer_profile == nil
+        return render json: {
+          success: false,
+          message: 'Profile not setup',
+          code: 'ERR_NO_PROFILE'
+        }
+      end
+
+      customer_address_information = [
+        @customer_profile.street_address_1,
+        @customer_profile.street_address_2,
+        @customer_profile.city,
+        @customer_profile.province.abbreviation,
+        @customer_profile.country
+      ].join(' ').strip
+      @customer_cart.customer_order_address = customer_address_information
+      @customer_cart.order_state = 1
+      @customer_cart.order_complete = true
+
+      if @customer_cart.save
+        return render json: {
+          success: true,
+          message: 'Order placed',
+          code: 'SUCCESS_ORDER_PLACED',
+          data: @customer_cart.to_json
+        }
+      else
+        return render json: {
+          success: false,
+          message: 'Unable to place order',
+          code: 'ERR_ORDER_FAILED',
+        }
+      end
+    end
+  end
+
   # inertia cart refresher
   inertia_share do
     {
@@ -254,13 +296,23 @@ class CustomerOrdersController < ApplicationController
 
     cart_total = 0
     item_count = 0
+    total_gst_amount = 0
+    total_hst_amount = 0
+    total_pst_amount = 0
     if cart_items.length > 0
       cart_items.each do |item|
         item_count += item.item_qty
+        cart_total += item.item_qty * item.item_cost
+        total_gst_amount += item.item_qty * item.item_cost * gst_tax
+        total_hst_amount += item.item_qty * item.item_cost * hst_tax
+        total_pst_amount += item.item_qty * item.item_cost * pst_tax
       end
     end
 
-    cart.order_total = cart_total
+    cart.order_total = cart_total + total_pst_amount + total_hst_amount + total_gst_amount
+    cart.total_gst = total_gst_amount
+    cart.total_hst = total_hst_amount
+    cart.total_pst = total_pst_amount
     cart.order_item_count = item_count
     cart.save
   end
@@ -271,6 +323,10 @@ class CustomerOrdersController < ApplicationController
     #   'cart' => @customer_cart,
     #   'cart_items' => @cart_items
     # }
+  end
+
+  def get_profile
+    @customer_profile = CustomerProfile.find_by(:user_id => current_user.id)
   end
 
   def customer_orders_items_params
