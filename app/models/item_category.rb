@@ -6,6 +6,10 @@ class ItemCategory < ApplicationRecord
   # item category to items
   has_many :items
 
+  def display_name
+    category_name
+  end
+
   def self.ransackable_attributes(auth_object = nil)
     ["category_description", "category_image_path", "category_name", "created_at", "id", "id_value", "updated_at"]
   end

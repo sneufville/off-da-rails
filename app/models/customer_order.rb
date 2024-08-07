@@ -6,4 +6,16 @@ class CustomerOrder < ApplicationRecord
   # relationships
   belongs_to :user
   has_many :customer_order_items
+
+  def display_name
+    "Order #{id} for #{user.email}"
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "customer_order_address", "id", "order_complete", "order_item_count", "order_state", "order_total", "total_gst", "total_hst", "total_pst", "transaction_id", "updated_at", "user_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["customer_order_items", "user"]
+  end
 end

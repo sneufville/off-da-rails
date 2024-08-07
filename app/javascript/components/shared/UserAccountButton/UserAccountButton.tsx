@@ -59,6 +59,14 @@ const UserAccountButton: React.FC<UserAccountButtonProps> = ({ user }) => {
             </Link>
           </MenuItem>
           <MenuItem>
+            <Link
+              href="/customer_orders/orders"
+              className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+            >
+              My Orders
+            </Link>
+          </MenuItem>
+          <MenuItem>
             <button
               className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
               onClick={() => setLogoutDialogOpen(true)}

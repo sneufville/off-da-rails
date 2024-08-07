@@ -8,7 +8,15 @@ class CustomerOrderItem < ApplicationRecord
   belongs_to :item
   belongs_to :customer_order
 
+  def display_name
+    item_name
+  end
+
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "id", "id_value", "item_cost", "customer_order_item_id", "item_name", "item_qty", "item_total_cost", "order_id", "hst_amt", "gst_amt", "pst_amt", "updated_at"]
+    ["created_at", "id", "id_value", "item_cost", "item", "item_name", "item_qty", "item_total_cost", "order_id", "hst_amt", "gst_amt", "pst_amt", "updated_at"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["customer_order", "item"]
   end
 end

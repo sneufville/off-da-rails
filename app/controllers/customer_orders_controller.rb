@@ -15,6 +15,20 @@ class CustomerOrdersController < ApplicationController
     }
   end
 
+  def customer_orders
+    orders = CustomerOrder.includes(:customer_order_items).where(:user_id => current_user.id, :order_state => 1)
+    order_items_collection = {}
+
+    orders.each do |order|
+      order_items_collection[order.id] = order.customer_order_items
+    end
+
+    render inertia: 'CustomerOrders/CustomerOrders', props: {
+      orders: orders,
+      order_items_collection: order_items_collection
+    }
+  end
+
   # -- API Routes --
   def api_cart
     cart = get_customer_cart
