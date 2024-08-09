@@ -4,6 +4,12 @@
  * project  off_da_rails_coffee
  */
 
+export type CommonResourceProps = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Item = {
   id: number;
   item_cost: number;
@@ -75,8 +81,7 @@ export type Cart = {
   order_item_count: number;
 };
 
-export type CustomerOrderItem = {
-  id: number;
+export type CustomerOrderItem = CommonResourceProps & {
   item_id: number;
   customer_order_id: number;
   item_cost: number;
@@ -95,4 +100,16 @@ export type CommonDialogProps = {
   dialogContent: string;
   dialogOpen: boolean;
   dialogTitle: string;
+};
+
+export type CustomerOrder = CommonResourceProps & {
+  customer_order_address?: string;
+  order_complete: boolean;
+  order_state: 0 | 1;
+  order_total: number;
+  total_gst: number;
+  total_hst: number;
+  total_pst: number;
+  transaction_id: string | null;
+  user_id: number;
 };
