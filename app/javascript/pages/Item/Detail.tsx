@@ -7,17 +7,15 @@
 import React from 'react';
 import type { FC as ReactFC } from 'react';
 import { Link } from '@inertiajs/react';
-import Lottie from 'lottie-react';
 import { FaTag } from 'react-icons/fa';
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
-import coffeeLoader from '../../components/animations/coffeeLoader.json';
-import type { Item, ItemCategory } from '../../@types/offDaRails';
+import type { Item, ItemCategory, ItemImage } from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 
 type DetailProps = {
   error?: string;
   item?: Item;
   item_category?: ItemCategory;
+  item_image?: ItemImage;
   related_items?: Array<Item>;
 };
 
@@ -25,9 +23,9 @@ const Detail: ReactFC<DetailProps> = ({
   error,
   item,
   item_category,
+  item_image,
   related_items,
 }) => {
-  console.log('related_items: ', item_category);
   const [loading, setLoading] = React.useState<boolean>(false);
   React.useEffect(() => {
     document.addEventListener('inertia:start', (e) => {
@@ -67,9 +65,16 @@ const Detail: ReactFC<DetailProps> = ({
         ) : undefined}
         {item ? (
           <div className="p-2 flex flex-col gap-y-4">
+            {item_image && item_image.filename ? (
+              <img
+                alt={`image for ${item.item_name}`}
+                className="h-60 object-cover w-full"
+                src={item_image.filename}
+              />
+            ) : null}
             <h1 className="text-4xl">{item.item_name}</h1>
             <p>{item.item_description}</p>
-            <p>${item.item_cost / 100}</p>
+            <p>${Number(item.item_cost).toFixed(2)}</p>
             <div className="flex items-center">
               {item_category ? (
                 <span className="px-2 py-1 text-white font-bold uppercase bg-blue-500 rounded w-fit flex items-center gap-x-1">
@@ -99,7 +104,7 @@ const Detail: ReactFC<DetailProps> = ({
                       {item.item_name}
                     </Link>
                   </h2>
-                  <p>${item.item_cost / 100}</p>
+                  <p>${Number(item.item_cost).toFixed(2)}</p>
                 </div>
               ))}
             </div>

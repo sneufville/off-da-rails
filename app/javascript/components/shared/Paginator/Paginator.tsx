@@ -22,17 +22,17 @@ const Paginator: React.FC<PaginatorProps> = ({
   const pageCount = Math.ceil(totalCount / itemsPerPage);
   // construct params for page
   return (
-    <nav className="py-2">
+    <nav className="py-2 gap-2 flex items-center">
       {Array(pageCount)
         .fill(0)
         .map((_, index) => (
           <Link
             key={`${pageTarget}-${index + 1}`}
             className={[
-              'p-2',
+              'p-2 rounded',
               currentPage === String(index + 1)
-                ? 'font-bold bg-blue-500 rounded text-white'
-                : '',
+                ? 'font-bold bg-blue-500 text-white'
+                : 'bg-slate-50',
             ].join(' ')}
             href={`/${pageTarget}?page=${index + 1}`}
           >

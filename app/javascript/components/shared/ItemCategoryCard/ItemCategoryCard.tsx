@@ -21,13 +21,15 @@ const ItemCategoryCard: React.FC<ItemCategoryCardProps> = ({
   linkBase,
 }) => {
   return (
-    <div className="p-2 rounded bg-gray-50 flex flex-col gap-y-2">
-      <h2 className="font-medium text-xl hover:underline">
-        <Link href={`/item_categories/${category.id}`}>
-          {category.category_name}
-        </Link>
-      </h2>
-      <p>{category.category_description}</p>
+    <div className="p-2 rounded bg-gray-50 flex flex-col justify-between gap-y-2">
+      <div>
+        <h2 className="font-medium text-xl hover:underline">
+          <Link href={`/item_categories/${category.id}`}>
+            {category.category_name}
+          </Link>
+        </h2>
+        <p>{category.category_description}</p>
+      </div>
       <Tag
         iconElement={<BiSolidShoppingBag />}
         tagText={`Number of items: ${itemCount}`}

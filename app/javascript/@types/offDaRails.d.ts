@@ -20,6 +20,10 @@ export type Item = {
   created_at: string;
 };
 
+export type ItemImage = {
+  filename: string;
+};
+
 export type ItemCategory = {
   id: number;
   category_name: string;

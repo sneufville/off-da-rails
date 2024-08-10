@@ -28,20 +28,22 @@ const ItemCategoryListing: React.FC<CategoryListingProps> = ({
 
   return (
     <PageWrapper>
-      <h1>Item Categories</h1>
-      {categories.length ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {categories.map((category) => (
-            <ItemCategoryCard
-              key={`item-category-${category.id}`}
-              category={category}
-              itemCount={getCountForCategory(category.id)}
-            />
-          ))}
-        </div>
-      ) : (
-        <InfoCard cardType={'info'} title={'No Item Categories were found'} />
-      )}
+      <div className="flex flex-col gap-y-2">
+        <h1 className="text-4xl text-slate-800">Item Categories</h1>
+        {categories.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {categories.map((category) => (
+              <ItemCategoryCard
+                key={`item-category-${category.id}`}
+                category={category}
+                itemCount={getCountForCategory(category.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <InfoCard cardType={'info'} title={'No Item Categories were found'} />
+        )}
+      </div>
     </PageWrapper>
   );
 };

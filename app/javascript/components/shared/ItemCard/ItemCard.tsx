@@ -14,6 +14,7 @@ import AppButton from '../AppButton/AppButton';
 type ItemCardProps = {
   item: Item;
   itemCategory?: ItemCategory;
+  itemImagePath?: string;
   linkBase?: string;
   addItemAction?: (item: Item) => void;
 };
@@ -21,12 +22,20 @@ type ItemCardProps = {
 const ItemCard: React.FC<ItemCardProps> = ({
   item,
   itemCategory,
+  itemImagePath,
   linkBase,
   addItemAction,
 }) => {
   return (
     <div className="p-2 bg-gray-50 rounded w-full">
       <div className="flex flex-col gap-y-2 flex-1 justify-between h-full">
+        {itemImagePath ? (
+          <img
+            alt={`image for ${item.item_name}`}
+            className="object-cover h-20 w-full"
+            src={itemImagePath}
+          />
+        ) : null}
         <h2 className="text-xl font-bold hover:underline duration-200">
           <Link href={`/${linkBase ? linkBase : 'items'}/${item.id}`}>
             {item.item_name}

@@ -14,7 +14,7 @@ import {
 } from '@headlessui/react';
 import { BiChevronDown, BiFilter, BiReset } from 'react-icons/bi';
 import clsx from 'clsx';
-import type { ItemCategory, Item } from '../../@types/offDaRails';
+import type { ItemCategory, Item, ItemImage } from '../../@types/offDaRails';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
 import ItemCard from '../../components/shared/ItemCard/ItemCard';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
@@ -27,6 +27,7 @@ type ItemListingProps = {
   current_page?: string;
   items: Array<Item>;
   item_categories: Array<ItemCategory>;
+  item_images: Record<number, ItemImage>;
   selected_item_category?: string;
   item_name_filter?: string;
   item_count: number;
@@ -36,12 +37,12 @@ const ItemIndex: React.FC<ItemListingProps> = ({
   current_page,
   item_categories,
   items,
+  item_images,
   selected_item_category,
   item_name_filter,
   item_count,
 }) => {
   const { csrf_token } = usePage().props;
-  console.log('load item listing with csrf_token: ', csrf_token);
   const [itemNameFilter, setItemNameFilter] = React.useState<string>('');
   const [categoryQuery, setCategoryQuery] = React.useState<string>('');
   const [selectedCategory, setSelectedCategory] =
@@ -96,6 +97,13 @@ const ItemIndex: React.FC<ItemListingProps> = ({
       return item_categories.find((c) => c.id === item.id);
     },
     [item_categories]
+  );
+
+  const getImageForItem = React.useCallback(
+    (item: Item): string | undefined => {
+      return item_images[item.id]?.filename;
+    },
+    [item_images]
   );
 
   const execAddItemToCart = React.useCallback(
@@ -217,6 +225,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
                     key={`item-${item.id}`}
                     item={item}
                     itemCategory={getCategoryForItem(item)}
+                    itemImagePath={getImageForItem(item)}
                     addItemAction={(item) => execAddItemToCart(item)}
                   />
                 ))}
