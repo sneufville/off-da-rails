@@ -11,6 +11,10 @@ import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import ItemCard from '../../components/shared/ItemCard/ItemCard';
 import coffeeSplash from '../../components/images/coffee-splash.jpg';
 import moreCoffee from '../../components/images/more-coffee.jpg';
+import ApiUtils from '../../utils/apiUtils';
+import { router, usePage } from '@inertiajs/react';
+import { toast } from 'react-toastify';
+import ProfileFormModal from '../../components/shared/ProfileFormModal/ProfileFormModal';
 
 type HomeProps = {
   name: string;
@@ -18,6 +22,42 @@ type HomeProps = {
 };
 
 const Home: ReactFC<HomeProps> = ({ name, items }) => {
+  const { csrf_token } = usePage().props;
+  const [showProfileModal, setShowProfileModal] =
+    React.useState<boolean>(false);
+
+  const execAddItemToCart = React.useCallback(
+    (item: Item, count?: number) => {
+      const _addToCart = async () => {
+        const token = document
+          .querySelector('meta[name="csrf-token"]')!
+          .getAttribute('content');
+        if (!token) return;
+        const response = await ApiUtils.addItemToCart({
+          itemId: item.id,
+          itemCount: count ? count : 1,
+          _token: token,
+        });
+        console.log('response: ', response);
+        if (response.success) {
+          // partial reload
+          router.reload({
+            only: ['cart', 'cart_items'],
+          });
+          toast.success('Item added to your cart');
+        } else {
+          if (response.code === 'ERR_NO_PROFILE') {
+            console.log('show no profile, quick modal');
+            setShowProfileModal(true);
+          }
+        }
+      };
+
+      _addToCart().then();
+    },
+    [csrf_token]
+  );
+
   return (
     <PageWrapper>
       <div className="flex flex-col gap-y-4">
@@ -46,7 +86,11 @@ const Home: ReactFC<HomeProps> = ({ name, items }) => {
           {items.length ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {items.map((item) => (
-                <ItemCard key={`item-${item.id}`} item={item} />
+                <ItemCard
+                  key={`item-${item.id}`}
+                  item={item}
+                  addItemAction={(orderItem) => execAddItemToCart(orderItem)}
+                />
               ))}
             </div>
           ) : (
@@ -54,6 +98,15 @@ const Home: ReactFC<HomeProps> = ({ name, items }) => {
           )}
         </div>
       </div>
+      <ProfileFormModal
+        dialogCancelAction={() => setShowProfileModal(false)}
+        dialogConfirmAction={() => setShowProfileModal(false)}
+        dialogContent={
+          'Please update your profile so that the appropriate tax information can be displayed'
+        }
+        dialogOpen={showProfileModal}
+        dialogTitle={'Update Profile'}
+      />
     </PageWrapper>
   );
 };
