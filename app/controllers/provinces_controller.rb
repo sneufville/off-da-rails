@@ -3,7 +3,7 @@ class ProvincesController < ApplicationController
     provinces = Province.all
 
     render json: {
-      provinces: provinces,
+      provinces:
     }
   end
 end

@@ -6,6 +6,7 @@ AllCops:
     - script/**/*
     - bin/**/*
     - test/**/*
+    - app/javascript/**/*
     - app/admin/**/*
     - app/channels/**/*
     - app/jobs/**/*

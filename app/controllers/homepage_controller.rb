@@ -6,9 +6,9 @@ class HomepageController < ApplicationController
     @items.each do |item|
       puts "category for item: #{item.item_category.category_name}"
     end
-    render inertia: 'Home/Home', props: {
-      name: 'Off_Da_RailZ Coffee Co',
-      items: @items,
+    render inertia: "Home/Home", props: {
+      name:            "Off_Da_RailZ Coffee Co",
+      items:           @items,
       item_categories: @item_categories
     }
   end

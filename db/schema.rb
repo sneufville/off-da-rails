@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_10_015304) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_10_053117) do
   create_table "about_pages", force: :cascade do |t|
     t.string "page_title"
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["page_title"], name: "index_about_pages_on_page_title", unique: true
   end
 
   create_table "active_admin_comments", force: :cascade do |t|
@@ -79,6 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_10_015304) do
     t.string "page_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["page_title"], name: "index_contact_pages_on_page_title", unique: true
   end
 
   create_table "customer_order_items", force: :cascade do |t|
