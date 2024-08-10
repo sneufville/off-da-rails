@@ -60,7 +60,11 @@ const CustomerCheckout = (): React.ReactNode => {
     ApiUtils.placeOrder(token)
       .then((result) => {
         if (result.success) {
-          toast.success('Order placed successfully');
+          toast.success('Order placed successfully', {
+            onClose: () => {
+              router.visit('/customer_orders/orders');
+            },
+          });
           router.reload({
             only: ['cart', 'customer_cart'],
           });

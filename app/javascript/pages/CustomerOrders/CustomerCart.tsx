@@ -15,6 +15,7 @@ import AppLoader from '../../components/shared/AppLoader/AppLoader';
 import AppButton from '../../components/shared/AppButton/AppButton';
 import { BiSolidArrowToRight } from 'react-icons/bi';
 import CustomerSummaryCard from '../../components/shared/CartSummaryCard/CartSummaryCard';
+import { toast } from 'react-toastify';
 
 const CustomerCart = (): React.ReactNode => {
   const { cart, cart_items } = usePage().props;
@@ -36,6 +37,7 @@ const CustomerCart = (): React.ReactNode => {
           router.reload({
             only: ['cart', 'cart_items'],
           });
+          toast.success(`${item.item_name} was updated in your cart`);
         }
       };
 
@@ -46,7 +48,6 @@ const CustomerCart = (): React.ReactNode => {
   );
 
   const execDeleteFromCart = React.useCallback((item: CustomerOrderItem) => {
-    console.log('try to delete item from cart');
     const _deleteAction = async () => {
       const token = ApiUtils.getCSRFToken();
       if (!token) return;
@@ -59,6 +60,7 @@ const CustomerCart = (): React.ReactNode => {
         router.reload({
           only: ['cart', 'cart_items'],
         });
+        toast.success('Item removed from your cart');
       }
     };
     setReqInProgress(true);
@@ -98,6 +100,7 @@ const CustomerCart = (): React.ReactNode => {
         )}
         <div>
           <AppButton
+            disabled={!_cart_items.length}
             iconelement={<BiSolidArrowToRight className="text-white" />}
             onClick={() => onNavToCheckout()}
           >

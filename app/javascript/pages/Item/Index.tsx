@@ -21,6 +21,7 @@ import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import Paginator from '../../components/shared/Paginator/Paginator';
 import ApiUtils from '../../utils/apiUtils';
 import ProfileFormModal from '../../components/shared/ProfileFormModal/ProfileFormModal';
+import { toast } from 'react-toastify';
 
 type ItemListingProps = {
   current_page?: string;
@@ -115,6 +116,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
           router.reload({
             only: ['cart', 'cart_items'],
           });
+          toast.success('Item added to your cart');
         } else {
           if (response.code === 'ERR_NO_PROFILE') {
             console.log('show no profile, quick modal');

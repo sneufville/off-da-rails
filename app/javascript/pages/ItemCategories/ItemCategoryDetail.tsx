@@ -5,13 +5,16 @@
  */
 
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import type { Item, ItemCategory } from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import InfoCard from '../../components/shared/InfoCard/InfoCard';
 import Tag from '../../components/shared/Tag/Tag';
-import { BiSolidShoppingBag } from 'react-icons/bi';
+import { BiSolidShoppingBag, BiSolidTag } from 'react-icons/bi';
 import ItemCard from '../../components/shared/ItemCard/ItemCard';
+import ProfileFormModal from '../../components/shared/ProfileFormModal/ProfileFormModal';
+import ApiUtils from '../../utils/apiUtils';
+import { toast } from 'react-toastify';
 
 type ItemCategoryDetailProps = {
   category?: ItemCategory;
@@ -26,11 +29,47 @@ const ItemCategoryDetail: React.FC<ItemCategoryDetailProps> = ({
   item_count,
   related_items,
 }) => {
+  const { csrf_token } = usePage().props;
+  const [showProfileModal, setShowProfileModal] =
+    React.useState<boolean>(false);
+
+  const execAddItemToCart = React.useCallback(
+    (item: Item, count?: number) => {
+      const _addToCart = async () => {
+        const token = document
+          .querySelector('meta[name="csrf-token"]')!
+          .getAttribute('content');
+        if (!token) return;
+        const response = await ApiUtils.addItemToCart({
+          itemId: item.id,
+          itemCount: count ? count : 1,
+          _token: token,
+        });
+        if (response.success) {
+          // partial reload
+          router.reload({
+            only: ['cart', 'cart_items'],
+          });
+          toast.success('Item added to your cart');
+        } else {
+          if (response.code === 'ERR_NO_PROFILE') {
+            setShowProfileModal(true);
+          }
+        }
+      };
+
+      _addToCart().then();
+    },
+    [csrf_token]
+  );
+
   return (
     <PageWrapper>
       {category ? (
         <div className="flex flex-col gap-4">
-          <h1 className="text-4xl">{category.category_name}</h1>
+          <h1 className="text-4xl flex items-center gap-1">
+            <BiSolidTag /> {category.category_name}
+          </h1>
           <p>{category.category_description}</p>
           <Tag
             iconElement={<BiSolidShoppingBag />}
@@ -52,7 +91,13 @@ const ItemCategoryDetail: React.FC<ItemCategoryDetailProps> = ({
             {related_items.length ? (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {related_items.map((item) => (
-                  <ItemCard key={`related-item-${item.id}`} item={item} />
+                  <ItemCard
+                    key={`related-item-${item.id}`}
+                    item={item}
+                    addItemAction={(orderItem) =>
+                      execAddItemToCart(orderItem, 1)
+                    }
+                  />
                 ))}
               </div>
             ) : (
@@ -62,6 +107,15 @@ const ItemCategoryDetail: React.FC<ItemCategoryDetailProps> = ({
               />
             )}
           </div>
+          <ProfileFormModal
+            dialogCancelAction={() => setShowProfileModal(false)}
+            dialogConfirmAction={() => setShowProfileModal(false)}
+            dialogContent={
+              'Please update your profile so that the appropriate tax information can be displayed'
+            }
+            dialogOpen={showProfileModal}
+            dialogTitle={'Update Profile'}
+          />
         </div>
       ) : (
         <InfoCard

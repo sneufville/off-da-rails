@@ -15,23 +15,23 @@ import React from 'react';
 import { BsFillCartPlusFill } from 'react-icons/bs';
 import type { Cart, CustomerOrderItem } from '../../../@types/offDaRails';
 import { Link } from '@inertiajs/react';
-import { BiSolidArrowToRight } from 'react-icons/bi';
+import { BiSolidArrowToRight, BiSolidShoppingBag } from 'react-icons/bi';
 
 type CartButtonProps = {
   cart: Cart | null;
   cartItems: CustomerOrderItem[];
 };
 
-const CartButton: React.FC<CartButtonProps> = ({ cartItems }) => {
+const CartButton: React.FC<CartButtonProps> = ({ cart, cartItems }) => {
   return (
     <div className="p-2">
       <Menu>
         <MenuButton className="inline-flex items-center gap-2 rounded-md">
           <div className="relative">
-            <span className="rounded-xl py-0.5 px-1 bg-blue-600 text-white absolute -top-2 -right-2">
+            <span className="rounded-xl h-6 w-6 bg-blue-600 text-white absolute -top-2 -right-2">
               {cartItems.length}
             </span>
-            <BsFillCartPlusFill size={32} />
+            <BiSolidShoppingBag size={32} />
           </div>
         </MenuButton>
         <MenuItems
@@ -51,13 +51,21 @@ const CartButton: React.FC<CartButtonProps> = ({ cartItems }) => {
               </div>
             </div>
           </MenuItem>
+          <MenuItem>
+            <div className="flex items-center justify-between p-2">
+              <span className="text-xs font-bold">Cart Total</span>
+              <span className="text-base bg-slate-50 rounded text-slate-700 p-1 font-medium">
+                ${cart ? Number(cart.order_total).toFixed(2) : 0.0}
+              </span>
+            </div>
+          </MenuItem>
           <MenuSeparator className="my-1 h-px bg-white/6" />
           <MenuItem>
             <Link
-              className="p-2 bg-indigo-600 rounded text-white flex items-center justify-between"
+              className="p-2 bg-green-600 rounded text-white flex items-center justify-between"
               href="/customer_orders/customer_cart"
             >
-              Cart
+              Go to your cart
               <BiSolidArrowToRight />
             </Link>
           </MenuItem>

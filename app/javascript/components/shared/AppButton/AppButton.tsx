@@ -13,7 +13,12 @@ type AppButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const AppButton: React.FC<AppButtonProps> = (props) => {
   return (
     <button
-      className="bg-green-600 hover:bg-green-500 duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-between"
+      className={[
+        'duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-between',
+        props.disabled
+          ? 'bg-slate-400 hover:bg-slate-300 cursor-not-allowed'
+          : 'bg-green-600 hover:bg-green-500 cursor-pointer',
+      ].join(' ')}
       {...props}
     >
       {props.children}

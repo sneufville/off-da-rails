@@ -28,11 +28,17 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
         className="bg-gray-50 p-4 w-full flex items-center justify-between"
         id="appMenu"
       >
-        <span className="font-bold text-xl">Menu Placeholder</span>
+        <span className="font-bold text-xl">Off Da Rails</span>
         <div className="flex items-center gap-x-2 px-2">
-          <Link href="/items">Items</Link>
-          <Link href="/item_categories">Item Categories</Link>
-          <BiSolidShoppingBag size={32} />
+          <Link className="text-lg uppercase hover:underline" href="/items">
+            Items
+          </Link>
+          <Link
+            className="text-lg uppercase hover:underline"
+            href="/item_categories"
+          >
+            Item Categories
+          </Link>
           {_user ? (
             <>
               <CartButton cart={_cart} cartItems={_cart_items} />

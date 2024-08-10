@@ -9,6 +9,7 @@ import { Link } from '@inertiajs/react';
 import type { Item, ItemCategory } from '../../../@types/offDaRails';
 import Tag from '../Tag/Tag';
 import { BsFillCartPlusFill } from 'react-icons/bs';
+import AppButton from '../AppButton/AppButton';
 
 type ItemCardProps = {
   item: Item;
@@ -25,7 +26,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
 }) => {
   return (
     <div className="p-2 bg-gray-50 rounded w-full">
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-2 flex-1 justify-between h-full">
         <h2 className="text-xl font-bold hover:underline duration-200">
           <Link href={`/${linkBase ? linkBase : 'items'}/${item.id}`}>
             {item.item_name}
@@ -33,19 +34,18 @@ const ItemCard: React.FC<ItemCardProps> = ({
         </h2>
         <p className="text-lg">{item.item_description}</p>
         <p className="font-bold">${item.item_cost}</p>
-        {itemCategory ? (
-          <Tag tagText={itemCategory.category_name} />
-        ) : undefined}
-        <div>
-          <button
-            className="p-2 rounded flex items-center gap-x-2 bg-indigo-600 text-white hover:bg-indigo-400"
+        <div className="flex flex-col gap-2">
+          {itemCategory ? (
+            <Tag tagText={itemCategory.category_name} />
+          ) : undefined}
+          <AppButton
             onClick={() =>
               typeof addItemAction === 'function' ? addItemAction(item) : {}
             }
           >
-            <BsFillCartPlusFill />
             Add to Bag
-          </button>
+            <BsFillCartPlusFill />
+          </AppButton>
         </div>
       </div>
     </div>
