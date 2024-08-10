@@ -6,7 +6,7 @@
 
 import React from 'react';
 import type { Cart, ProvinceTaxEntry } from '../../../@types/offDaRails';
-import { BiLogoStripe } from 'react-icons/bi';
+import { BiCreditCard } from 'react-icons/bi';
 
 type OrderTotalCardProps = {
   cart: Cart;
@@ -44,7 +44,7 @@ const OrderTotalCard: React.FC<OrderTotalCardProps> = ({
           onClick={checkoutAction}
         >
           <span className="flex items-center">
-            <BiLogoStripe size={32} />
+            <BiCreditCard size={32} />
             Checkout with Stripe ${Number(cart.order_total).toFixed(2)}
           </span>
         </button>

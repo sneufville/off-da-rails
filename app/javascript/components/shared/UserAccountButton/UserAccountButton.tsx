@@ -6,16 +6,15 @@
 
 import React from 'react';
 import { Link, router } from '@inertiajs/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuSeparator,
-} from '@headlessui/react';
-import { BiSolidUserAccount } from 'react-icons/bi';
+  BiSolidLogOut,
+  BiSolidShoppingBag,
+  BiSolidUserAccount,
+} from 'react-icons/bi';
 import type { CustomerProfile, User } from '../../../@types/offDaRails';
 import LogoutDialog from '../LogoutDialog/LogoutDialog';
+import AppButton from '../AppButton/AppButton';
 
 type UserAccountButtonProps = {
   user: User;
@@ -39,40 +38,42 @@ const UserAccountButton: React.FC<UserAccountButtonProps> = ({ user }) => {
         <MenuItems
           transition
           anchor={'bottom end'}
-          className="w-60 origin-top-right rounded bg-slate-200 p-2 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="w-60 flex flex-col gap-2 origin-top-right rounded bg-slate-200 p-2 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <MenuItem>
-            <div className="flex flex-col gap-y-1 p-2">
+            <div className="flex flex-col gap-y-1 p-2 bg-slate-50 rounded">
               <span className="text-xs font-bold text-white/6">
                 Logged in as:
               </span>
               <span className="text-base">{user.email}</span>
             </div>
           </MenuItem>
-          <MenuSeparator className="my-1 h-px bg-white/6" />
           <MenuItem>
             <Link
               href="/customer_profiles/me"
-              className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+              className="duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-between bg-green-600"
             >
               My Profile
+              <BiSolidUserAccount />
             </Link>
           </MenuItem>
           <MenuItem>
             <Link
               href="/customer_orders/orders"
-              className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+              className="duration-200 text-white font-bold flex items-center gap-1 rounded p-2 w-full justify-between bg-green-600"
             >
               My Orders
+              <BiSolidShoppingBag />
             </Link>
           </MenuItem>
           <MenuItem>
-            <button
-              className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+            <AppButton
+              extraclasses="bg-red-700 hover:bg-red-600"
               onClick={() => setLogoutDialogOpen(true)}
             >
               Logout?
-            </button>
+              <BiSolidLogOut />
+            </AppButton>
           </MenuItem>
         </MenuItems>
       </Menu>

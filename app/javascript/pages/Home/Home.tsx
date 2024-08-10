@@ -6,9 +6,11 @@
 
 import * as React from 'react';
 import type { FC as ReactFC } from 'react';
-import { Link } from '@inertiajs/react';
 import type { Item } from '../../@types/offDaRails';
 import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
+import ItemCard from '../../components/shared/ItemCard/ItemCard';
+import coffeeSplash from '../../components/images/coffee-splash.jpg';
+import moreCoffee from '../../components/images/more-coffee.jpg';
 
 type HomeProps = {
   name: string;
@@ -19,24 +21,32 @@ const Home: ReactFC<HomeProps> = ({ name, items }) => {
   return (
     <PageWrapper>
       <div className="flex flex-col gap-y-4">
-        <h1 className="text-4xl">Home Component</h1>
-        <p className="text-xl">{name}</p>
-        <div>
+        <img
+          alt={'welcome to off da rails'}
+          className="h-80 object-cover"
+          src={coffeeSplash}
+        />
+        <h1 className="text-4xl">Welcome to Off Da Rails Coffee Co</h1>
+        <p className="text-lg">
+          Off Da Rails Coffee Company, a (fictional) retail coffee company based
+          in Winnipeg specializing in what they call, the Awesome Coffee
+          Experience, has requested the creation of an e-commerce website which
+          will allow them to showcase and sell their products.{' '}
+        </p>
+        <div className="flex flex-col gap-2">
+          <img
+            alt={'more coffee'}
+            className="object-cover h-40"
+            src={moreCoffee}
+          />
+          <h2 className="text-2xl">Some of our finest products</h2>
+          <p>
+            Below is a list of some of our finest products for you to check out.
+          </p>
           {items.length ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {items.map((item) => (
-                <div
-                  className="bg-slate-50 rounded p-2 border-gray-200 flex flex-col gap-y-2"
-                  key={`item-${item.id}`}
-                >
-                  <h2 className="font-bold text-xl">
-                    <Link href={`items/${item.id}`}>{item.item_name}</Link>
-                  </h2>
-                  <p className="text-lg leading-8 italic">
-                    {item.item_description}
-                  </p>
-                  <p className="text-md">${item.item_cost / 100}</p>
-                </div>
+                <ItemCard key={`item-${item.id}`} item={item} />
               ))}
             </div>
           ) : (

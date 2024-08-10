@@ -45,7 +45,7 @@ const CartButton: React.FC<CartButtonProps> = ({ cart, cartItems }) => {
                 <span className="text-xs font-bold text-white/6">
                   Items in your cart:
                 </span>
-                <span className="text-base font-medium">
+                <span className="text-base bg-slate-50 rounded text-slate-700 p-1 font-medium">
                   {cartItems.length}
                 </span>
               </div>

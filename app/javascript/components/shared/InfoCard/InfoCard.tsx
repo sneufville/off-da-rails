@@ -31,7 +31,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
       {IconElement[cardType]}
       <h2 className="text-2xl">{title}</h2>
       {content ? (
-        <p className="text-lg leading-4 font-medium">{content}</p>
+        <p className="text-lg leading-8 font-medium">{content}</p>
       ) : undefined}
       {actionItems ? (
         <div className="flex items-center gap-x-2 flex-wrap">{actionItems}</div>

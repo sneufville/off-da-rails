@@ -17,6 +17,7 @@ import PageWrapper from '../../components/shared/PageWrapper/PageWrapper';
 import ApiUtils from '../../utils/apiUtils';
 import FormError from '../../components/shared/FormError/FormError';
 import AppDialog from '../../components/shared/AppDialog/AppDialog';
+import AppButton from '../../components/shared/AppButton/AppButton';
 
 type CustomerProfileProps = {
   profile_updated?: boolean;
@@ -307,14 +308,11 @@ const CustomerProfile: React.FC<CustomerProfileProps> = ({
               ) : undefined}
             </div>
           </div>
-          <div className="w-full">
-            <button
-              className="p-2 rounded bg-blue-500 text-white flex items-center gap-x-2"
-              type="submit"
-            >
-              <BsCheckCircleFill />
+          <div className="w-60">
+            <AppButton type="submit">
               {customer_profile ? 'Update' : 'Create'} Customer Profile
-            </button>
+              <BsCheckCircleFill />
+            </AppButton>
           </div>
         </form>
         <AppDialog

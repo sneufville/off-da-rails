@@ -140,7 +140,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
 
   return (
     <PageWrapper>
-      <div>
+      <div className="flex flex-col gap-2">
         <h1 className="text-4xl">Items</h1>
         <div className="flex flex-col gap-y-2 p-2 bg-gray-50 rounded">
           <input
@@ -196,7 +196,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
           </Combobox>
           <div className="flex items-center gap-x-2">
             <button
-              className="p-2 rounded bg-blue-500 text-white w-full flex items-center gap-x-2"
+              className="p-2 rounded bg-green-600 text-white w-full flex items-center gap-x-2"
               onClick={execFilterItems}
             >
               <BiFilter />
@@ -213,7 +213,7 @@ const ItemIndex: React.FC<ItemListingProps> = ({
         </div>
         <section className="flex flex-col gap-y-2">
           <div className="flex items-center">
-            <span className="p-2 bg-gray-400 rounded">
+            <span className="p-2 bg-gray-800 rounded text-white">
               {item_count} item{item_count !== 1 ? 's' : ''} found
             </span>
           </div>

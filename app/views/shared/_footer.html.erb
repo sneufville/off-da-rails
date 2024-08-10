@@ -1,10 +1,13 @@
-<footer class="p-4 bg-slate-50 mt-2">
-  <span class="font-bold text-slate-700">
+<footer class="fixed bottom-0 left-0 z-20 w-full py-2 px-8 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
+  <span class="font-bold text-slate-50">
   &copy; Not-Copyright 2024 Off Da Rails Coffee Co.
   </span>
   <br>
-  <div class="flex items-center p-2 gap-4">
-    <%= link_to 'About', "/about_page", class: "underline" %>
-    <%= link_to 'Contact Us', "/contact_page", class: "underline" %>
+  <div class="text-slate-50">
+    <div class="flex items-center relative self-center gap-4 p-2">
+      <%= link_to 'Home', "/", class: "underline" %>
+      <%= link_to 'About', "/about_page", class: "underline" %>
+      <%= link_to 'Contact Us', "/contact_page", class: "underline" %>
+    </div>
   </div>
 </footer>
